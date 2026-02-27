@@ -12,7 +12,9 @@
  */
 require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const mongoose = require('mongoose');
-const connectDB = require('../../../config/db');
+const fs = require('fs');
+const path = require('path');
+const connectDB = require('../../config/db');
 const { Book, Chapter, Question } = require('../models');
 const { BOOKS, CHAPTERS } = require('./structureData');
 
@@ -51,6 +53,21 @@ async function seed() {
   console.log(`\nCreated ${CHAPTERS.length} chapters.\n`);
 
   // ── Seed Placeholder Questions ───────────────────────────────────
+  const qaJsonPath = path.join(__dirname, '../../data/catechism_qa.json');
+  let qaByNumber = new Map();
+  if (fs.existsSync(qaJsonPath)) {
+    const raw = fs.readFileSync(qaJsonPath, 'utf8');
+    const parsed = JSON.parse(raw);
+    qaByNumber = new Map(
+      parsed
+        .filter(item => Number.isInteger(item.questionNumber))
+        .map(item => [item.questionNumber, item])
+    );
+    console.log(`Loaded ${qaByNumber.size} Q&A entries from JSON.\n`);
+  } else {
+    console.log('No catechism_qa.json found; using placeholder text for all questions.\n');
+  }
+
   // Map each question number to its book and chapter
   let questionCount = 0;
   const questionBulk = [];
@@ -73,10 +90,11 @@ async function seed() {
     const book = bookDocs[bookData.bookNumber];
     const chapter = chapterDocs[`${chapData.bookNumber}-${chapData.chapterNumber}`];
 
+    const qa = qaByNumber.get(qNum);
     questionBulk.push({
       questionNumber: qNum,
-      question: `[Question ${qNum} — to be extracted from PDF]`,
-      answer: `[Answer ${qNum} — to be extracted from PDF]`,
+      question: qa?.question || `[Question ${qNum} ? to be extracted from PDF]`,
+      answer: qa?.answer || `[Answer ${qNum} ? to be extracted from PDF]`,
       book: book._id,
       chapter: chapter._id,
       bookNumber: bookData.bookNumber,
@@ -91,7 +109,7 @@ async function seed() {
 
   // Bulk insert for performance
   await Question.insertMany(questionBulk);
-  console.log(`Created ${questionCount} placeholder questions.\n`);
+  console.log(`Created ${questionCount} questions (${qaByNumber.size} from JSON, ${Math.max(0, questionCount - qaByNumber.size)} placeholders).\n`);
 
   // ── Update Book totalQuestions ────────────────────────────────────
   for (const bookData of BOOKS) {
@@ -119,3 +137,4 @@ seed().catch(err => {
   console.error('Seed failed:', err);
   process.exit(1);
 });
+

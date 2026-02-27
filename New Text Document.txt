@@ -1,0 +1,6 @@
+mongodb
+catechism-admin
+qHBrZ6UggbCqzavR
+
+mongodb+srv://catechism-admin:qHBrZ6UggbCqzavR@catechesis.7rl2dxa.mongodb.net/?appName=Catechesis
+mongodb+srv://catechism-admin:qHBrZ6UggbCqzavR@cluster0.abc123.mongodb.net/Catechesis?retryWrites=true&w=majority

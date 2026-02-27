@@ -19,7 +19,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
-const connectDB = require('../../../config/db');
+const connectDB = require('../../config/db');
 const { Question } = require('../models');
 
 const DATA_DIR = path.join(__dirname, '../../data');
