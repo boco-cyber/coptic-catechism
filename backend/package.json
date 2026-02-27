@@ -1,0 +1,22 @@
+{
+  "name": "coptic-catechism-api",
+  "version": "1.0.0",
+  "description": "REST API for the Coptic Catechism educational platform",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "seed": "node src/seeds/seedDatabase.js",
+    "seed:questions": "node src/seeds/extractAndSeed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mongoose": "^8.5.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
