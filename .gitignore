@@ -1,0 +1,8 @@
+node_modules/
+.env
+
+# Raw OCR output (reproducible from PDFs)
+backend/data/ocr_book*.txt
+
+# macOS
+.DS_Store

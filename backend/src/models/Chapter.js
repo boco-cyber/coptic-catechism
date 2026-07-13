@@ -23,6 +23,10 @@ const chapterSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  titleAr: {
+    type: String,
+    trim: true
+  },
   questionRange: {
     start: { type: Number, required: true },
     end: { type: Number, required: true }

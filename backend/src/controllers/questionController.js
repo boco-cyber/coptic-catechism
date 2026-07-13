@@ -1,26 +1,44 @@
-const { Question, Book, Chapter } = require('../models');
+const { Question, QuestionAr, Book, Chapter } = require('../models');
+
+function getModel(lang) {
+  return lang === 'ar' ? QuestionAr : Question;
+}
 
 // GET /api/questions/:questionNumber - Get single question
 exports.getQuestion = async (req, res) => {
   try {
     const { questionNumber } = req.params;
-    const question = await Question.findOne({
+    const lang = req.query.lang;
+    const Model = getModel(lang);
+
+    const question = await Model.findOne({
       questionNumber: parseInt(questionNumber)
     })
-      .populate('book', 'bookNumber title')
-      .populate('chapter', 'chapterNumber title')
+      .populate('book', 'bookNumber title titleAr')
+      .populate('chapter', 'chapterNumber title titleAr')
       .lean();
 
     if (!question) {
       return res.status(404).json({ success: false, error: 'Question not found' });
     }
 
-    // Get prev/next for navigation
-    const prev = await Question.findOne({
+    // Swap titles in populated docs
+    if (lang === 'ar') {
+      if (question.book && question.book.titleAr) {
+        question.book.title = question.book.titleAr;
+      }
+      if (question.chapter && question.chapter.titleAr) {
+        question.chapter.title = question.chapter.titleAr;
+      }
+    }
+    delete question.book?.titleAr;
+    delete question.chapter?.titleAr;
+
+    const prev = await Model.findOne({
       questionNumber: { $lt: question.questionNumber }
     }).sort({ questionNumber: -1 }).select('questionNumber question').lean();
 
-    const next = await Question.findOne({
+    const next = await Model.findOne({
       questionNumber: { $gt: question.questionNumber }
     }).sort({ questionNumber: 1 }).select('questionNumber question').lean();
 
@@ -37,16 +55,28 @@ exports.getQuestion = async (req, res) => {
 exports.getQuestionRange = async (req, res) => {
   try {
     const { start, end } = req.params;
-    const questions = await Question.find({
+    const lang = req.query.lang;
+    const Model = getModel(lang);
+
+    const questions = await Model.find({
       questionNumber: {
         $gte: parseInt(start),
         $lte: parseInt(end)
       }
     })
       .sort({ questionNumber: 1 })
-      .populate('book', 'bookNumber title')
-      .populate('chapter', 'chapterNumber title')
+      .populate('book', 'bookNumber title titleAr')
+      .populate('chapter', 'chapterNumber title titleAr')
       .lean();
+
+    if (lang === 'ar') {
+      for (const q of questions) {
+        if (q.book?.titleAr) q.book.title = q.book.titleAr;
+        if (q.chapter?.titleAr) q.chapter.title = q.chapter.titleAr;
+        delete q.book?.titleAr;
+        delete q.chapter?.titleAr;
+      }
+    }
 
     res.json({ success: true, count: questions.length, data: questions });
   } catch (error) {
@@ -58,6 +88,8 @@ exports.getQuestionRange = async (req, res) => {
 exports.searchQuestions = async (req, res) => {
   try {
     const { q, book, page = 1, limit = 20 } = req.query;
+    const lang = req.query.lang;
+    const Model = getModel(lang);
 
     if (!q || q.trim().length < 2) {
       return res.status(400).json({
@@ -70,7 +102,6 @@ exports.searchQuestions = async (req, res) => {
       $text: { $search: q.trim() }
     };
 
-    // Optional: filter by book number
     if (book) {
       filter.bookNumber = parseInt(book);
     }
@@ -78,15 +109,24 @@ exports.searchQuestions = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const [questions, total] = await Promise.all([
-      Question.find(filter, { score: { $meta: 'textScore' } })
+      Model.find(filter, { score: { $meta: 'textScore' } })
         .sort({ score: { $meta: 'textScore' } })
         .skip(skip)
         .limit(parseInt(limit))
-        .populate('book', 'bookNumber title')
-        .populate('chapter', 'chapterNumber title')
+        .populate('book', 'bookNumber title titleAr')
+        .populate('chapter', 'chapterNumber title titleAr')
         .lean(),
-      Question.countDocuments(filter)
+      Model.countDocuments(filter)
     ]);
+
+    if (lang === 'ar') {
+      for (const q of questions) {
+        if (q.book?.titleAr) q.book.title = q.book.titleAr;
+        if (q.chapter?.titleAr) q.chapter.title = q.chapter.titleAr;
+        delete q.book?.titleAr;
+        delete q.chapter?.titleAr;
+      }
+    }
 
     res.json({
       success: true,
@@ -106,14 +146,15 @@ exports.getBookQuiz = async (req, res) => {
   try {
     const { bookNumber } = req.params;
     const count = parseInt(req.query.count) || 10;
+    const lang = req.query.lang;
+    const Model = getModel(lang);
 
     const book = await Book.findOne({ bookNumber: parseInt(bookNumber) });
     if (!book) {
       return res.status(404).json({ success: false, error: 'Book not found' });
     }
 
-    // Get random questions from this book
-    const questions = await Question.aggregate([
+    const questions = await Model.aggregate([
       { $match: { book: book._id } },
       { $sample: { size: Math.min(count, 50) } },
       {
@@ -126,11 +167,13 @@ exports.getBookQuiz = async (req, res) => {
       }
     ]);
 
+    const bookTitle = lang === 'ar' && book.titleAr ? book.titleAr : book.title;
+
     res.json({
       success: true,
       quiz: {
         bookNumber: book.bookNumber,
-        bookTitle: book.title,
+        bookTitle,
         questionCount: questions.length,
         questions
       }
@@ -145,6 +188,8 @@ exports.getChapterQuiz = async (req, res) => {
   try {
     const { bookNumber, chapterNumber } = req.params;
     const count = parseInt(req.query.count) || 10;
+    const lang = req.query.lang;
+    const Model = getModel(lang);
 
     const book = await Book.findOne({ bookNumber: parseInt(bookNumber) });
     if (!book) {
@@ -159,7 +204,7 @@ exports.getChapterQuiz = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Chapter not found' });
     }
 
-    const questions = await Question.aggregate([
+    const questions = await Model.aggregate([
       { $match: { chapter: chapter._id } },
       { $sample: { size: Math.min(count, 50) } },
       {
@@ -171,13 +216,16 @@ exports.getChapterQuiz = async (req, res) => {
       }
     ]);
 
+    const bookTitle = lang === 'ar' && book.titleAr ? book.titleAr : book.title;
+    const chapterTitle = lang === 'ar' && chapter.titleAr ? chapter.titleAr : chapter.title;
+
     res.json({
       success: true,
       quiz: {
         bookNumber: book.bookNumber,
-        bookTitle: book.title,
+        bookTitle,
         chapterNumber: chapter.chapterNumber,
-        chapterTitle: chapter.title,
+        chapterTitle,
         questionCount: questions.length,
         questions
       }
@@ -190,20 +238,22 @@ exports.getChapterQuiz = async (req, res) => {
 // GET /api/stats - General statistics
 exports.getStats = async (req, res) => {
   try {
-    const [bookCount, chapterCount, questionCount] = await Promise.all([
+    const [bookCount, chapterCount, questionCount, questionArCount] = await Promise.all([
       Book.countDocuments(),
       Chapter.countDocuments(),
-      Question.countDocuments()
+      Question.countDocuments(),
+      QuestionAr.countDocuments()
     ]);
 
-    const bookStats = await Question.aggregate([
-      {
-        $group: {
-          _id: '$bookNumber',
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: 1 } }
+    const [bookStatsEn, bookStatsAr] = await Promise.all([
+      Question.aggregate([
+        { $group: { _id: '$bookNumber', count: { $sum: 1 } } },
+        { $sort: { _id: 1 } }
+      ]),
+      QuestionAr.aggregate([
+        { $group: { _id: '$bookNumber', count: { $sum: 1 } } },
+        { $sort: { _id: 1 } }
+      ])
     ]);
 
     res.json({
@@ -211,8 +261,9 @@ exports.getStats = async (req, res) => {
       data: {
         books: bookCount,
         chapters: chapterCount,
-        questions: questionCount,
-        questionsByBook: bookStats
+        questions: questionCount + questionArCount,
+        questionsByLang: { en: questionCount, ar: questionArCount },
+        questionsByBook: { en: bookStatsEn, ar: bookStatsAr }
       }
     });
   } catch (error) {

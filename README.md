@@ -85,10 +85,45 @@ npx expo start          # Start Expo dev server
 | GET | `/api/search?q=keyword` | Full-text search |
 | GET | `/api/quiz/:bookId` | Get random quiz for a book |
 | GET | `/api/quiz/chapter/:chapterId` | Get random quiz for a chapter |
+| GET | `/api/stats` | General statistics |
 
-## Deployment (Oracle Cloud)
+### Arabic Language (`?lang=ar`)
 
-See `docs/oracle-deployment.md` for step-by-step OCI setup.
+Append `?lang=ar` to any endpoint to get translated content:
+
+```
+GET /api/books?lang=ar
+GET /api/books/1?lang=ar
+GET /api/books/1/chapters/1?lang=ar
+GET /api/questions/42?lang=ar
+GET /api/questions/range/1/92?lang=ar
+GET /api/search?q=إيمان&lang=ar
+GET /api/quiz/1?lang=ar
+```
+
+- Book/chapter titles: swapped with Arabic equivalents (when populated)
+- Questions: served from the parallel `QuestionAr` collection
+- Answers: empty until extracted from Arabic PDFs (see `docs/superpowers/plans/multilingual-backend-v1.md`)
+
+## Seeding the Database
+
+```bash
+cd backend
+
+# Seed English content (books, chapters, questions)
+npm run seed
+
+# Seed Arabic content (requires English seed to have run first)
+npm run seed:arabic
+
+# Extract questions from PDFs and seed
+npm run seed:questions
+```
+
+## Deployment
+
+- **Oracle Cloud**: See `docs/oracle-deployment.md` for step-by-step OCI setup
+- **Coolify / Docker**: Use the `Dockerfile` in `backend/` for containerized deployment
 
 ## License
 

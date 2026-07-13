@@ -7,7 +7,8 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node src/seeds/seedDatabase.js",
-    "seed:questions": "node src/seeds/extractAndSeed.js"
+    "seed:questions": "node src/seeds/extractAndSeed.js",
+    "seed:arabic": "node src/seeds/seedArabic.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

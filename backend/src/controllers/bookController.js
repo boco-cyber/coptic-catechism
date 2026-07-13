@@ -1,17 +1,35 @@
-const { Book, Chapter, Question } = require('../models');
+const { Book, Chapter, Question, QuestionAr } = require('../models');
+
+function swapTitles(doc, lang) {
+  if (lang === 'ar' && doc) {
+    if (doc.titleAr) doc.title = doc.titleAr;
+    if (doc.descriptionAr) doc.description = doc.descriptionAr;
+    delete doc.titleAr;
+    delete doc.descriptionAr;
+  }
+  return doc;
+}
+
+function swapChapterTitle(doc, lang) {
+  if (lang === 'ar' && doc && doc.titleAr) {
+    doc.title = doc.titleAr;
+    delete doc.titleAr;
+  }
+  return doc;
+}
 
 // GET /api/books - List all books with chapter counts
 exports.getAllBooks = async (req, res) => {
   try {
+    const lang = req.query.lang;
     const books = await Book.find()
       .sort({ bookNumber: 1 })
       .lean();
 
-    // Attach chapter count for each book
     const booksWithChapters = await Promise.all(
       books.map(async (book) => {
         const chapterCount = await Chapter.countDocuments({ book: book._id });
-        return { ...book, chapterCount };
+        return { ...swapTitles(book, lang), chapterCount };
       })
     );
 
@@ -25,6 +43,7 @@ exports.getAllBooks = async (req, res) => {
 exports.getBook = async (req, res) => {
   try {
     const { bookNumber } = req.params;
+    const lang = req.query.lang;
     const book = await Book.findOne({ bookNumber: parseInt(bookNumber) }).lean();
 
     if (!book) {
@@ -35,7 +54,9 @@ exports.getBook = async (req, res) => {
       .sort({ sortOrder: 1 })
       .lean();
 
-    res.json({ success: true, data: { ...book, chapters } });
+    const chaptersMapped = chapters.map(ch => swapChapterTitle(ch, lang));
+
+    res.json({ success: true, data: { ...swapTitles(book, lang), chapters: chaptersMapped } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -45,6 +66,7 @@ exports.getBook = async (req, res) => {
 exports.getChapter = async (req, res) => {
   try {
     const { bookNumber, chapterNumber } = req.params;
+    const lang = req.query.lang;
 
     const book = await Book.findOne({ bookNumber: parseInt(bookNumber) });
     if (!book) {
@@ -60,13 +82,18 @@ exports.getChapter = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Chapter not found' });
     }
 
-    const questions = await Question.find({ chapter: chapter._id })
+    const QuestionModel = lang === 'ar' ? QuestionAr : Question;
+    const questions = await QuestionModel.find({ chapter: chapter._id })
       .sort({ questionNumber: 1 })
       .lean();
 
     res.json({
       success: true,
-      data: { ...chapter, bookTitle: book.title, questions }
+      data: {
+        ...swapChapterTitle(chapter, lang),
+        bookTitle: lang === 'ar' && book.titleAr ? book.titleAr : book.title,
+        questions
+      }
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

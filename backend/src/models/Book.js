@@ -26,6 +26,14 @@ const bookSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  titleAr: {
+    type: String,
+    trim: true
+  },
+  descriptionAr: {
+    type: String,
+    trim: true
+  },
   totalQuestions: {
     type: Number,
     default: 0
