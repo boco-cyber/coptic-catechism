@@ -4,6 +4,38 @@ function getModel(lang) {
   return lang === 'ar' ? QuestionAr : Question;
 }
 
+const ARABIC_BOOK_TITLES = {
+  1: 'مقدمة في الكاتيكيزم القبطي',
+  2: 'العقائد المسيحية',
+  3: 'الكنيسة: ملكوت الله',
+  4: 'العبادة الكنسية رحلة إلى السماء',
+  5: 'المؤمن والطغمات السمائية',
+  6: 'المفاهيم المسيحية والحياة اليومية',
+  7: 'الأخرويات والحياة بعد الموت'
+};
+
+function arabicNumber(value) {
+  return Number(String(value).replace(/[٠-٩]/g, digit => '٠١٢٣٤٥٦٧٨٩'.indexOf(digit)));
+}
+
+function cleanArabicQuestion(text, questionNumber) {
+  let output = String(text || '').trim();
+  const leading = output.match(/^[\s؛;.,:،]*(\d+|[٠-٩]+)\s*/);
+  if (leading && arabicNumber(leading[1]) === Number(questionNumber)) {
+    output = output.slice(leading[0].length);
+  }
+  output = output.replace(/^[\s؛;.,:،]+/, '');
+  output = output.replace(/\s*\(?[0-9٠-٩]+(?:\/[0-9٠-٩]+)+\)?\s*([؟?])$/, '$1');
+  return output.trim();
+}
+
+function localizeArabicRelations(item) {
+  if (item?.book) {
+    item.book.title = item.book.titleAr || ARABIC_BOOK_TITLES[item.book.bookNumber] || item.book.title;
+  }
+  if (item?.chapter?.titleAr) item.chapter.title = item.chapter.titleAr;
+}
+
 async function addArabicFallback(items) {
   const rows = Array.isArray(items) ? items : [items];
   const numbers = rows.filter(Boolean).map((item) => item.questionNumber);
@@ -16,6 +48,8 @@ async function addArabicFallback(items) {
 
   for (const item of rows) {
     if (!item) continue;
+    item.question = cleanArabicQuestion(item.question, item.questionNumber);
+    localizeArabicRelations(item);
     const fallback = english.get(item.questionNumber);
     if (!fallback) continue;
     if (!item.question) item.question = fallback.question;
@@ -69,13 +103,8 @@ exports.getQuestion = async (req, res) => {
 
     // Swap titles in populated docs
     if (lang === 'ar') {
-      if (question.book && question.book.titleAr) {
-        question.book.title = question.book.titleAr;
-      }
+      localizeArabicRelations(question);
       if (!usedEnglishFallback) await addArabicFallback(question);
-      if (question.chapter && question.chapter.titleAr) {
-        question.chapter.title = question.chapter.titleAr;
-      }
     }
     delete question.book?.titleAr;
     delete question.chapter?.titleAr;
@@ -117,8 +146,7 @@ exports.getQuestionRange = async (req, res) => {
 
     if (lang === 'ar') {
       for (const q of questions) {
-        if (q.book?.titleAr) q.book.title = q.book.titleAr;
-        if (q.chapter?.titleAr) q.chapter.title = q.chapter.titleAr;
+        localizeArabicRelations(q);
         delete q.book?.titleAr;
         delete q.chapter?.titleAr;
       }
@@ -188,8 +216,7 @@ exports.searchQuestions = async (req, res) => {
 
     if (lang === 'ar') {
       for (const q of questions) {
-        if (q.book?.titleAr) q.book.title = q.book.titleAr;
-        if (q.chapter?.titleAr) q.chapter.title = q.chapter.titleAr;
+        localizeArabicRelations(q);
         delete q.book?.titleAr;
         delete q.chapter?.titleAr;
       }

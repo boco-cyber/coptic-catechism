@@ -1,8 +1,15 @@
 const { Book, Chapter, Question, QuestionAr } = require('../models');
 
+const ARABIC_BOOK_TITLES = {
+  1: 'مقدمة في الكاتيكيزم القبطي', 2: 'العقائد المسيحية',
+  3: 'الكنيسة: ملكوت الله', 4: 'العبادة الكنسية رحلة إلى السماء',
+  5: 'المؤمن والطغمات السمائية', 6: 'المفاهيم المسيحية والحياة اليومية',
+  7: 'الأخرويات والحياة بعد الموت'
+};
+
 function swapTitles(doc, lang) {
   if (lang === 'ar' && doc) {
-    if (doc.titleAr) doc.title = doc.titleAr;
+    doc.title = doc.titleAr || ARABIC_BOOK_TITLES[doc.bookNumber] || doc.title;
     if (doc.descriptionAr) doc.description = doc.descriptionAr;
     delete doc.titleAr;
     delete doc.descriptionAr;
