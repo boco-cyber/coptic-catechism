@@ -1,144 +1,179 @@
-"""
-Extract Arabic answers from book PDFs using cached OCR text.
-Strategy: find question numbers in OCR text and extract between them.
-"""
-import os, re, json, unicodedata
+#!/usr/bin/env python3
+"""Build the Arabic Q&A dataset from the cached text of the seven volumes.
 
-OUT_DIR = os.path.join(os.path.dirname(__file__), "../../data")
+The PDFs contain many unrelated numbers (pages, Bible verses and footnotes), so
+question numbers are not reliable anchors.  Instead, this script aligns the
+known Arabic question index with question-like lines in each volume while
+preserving document order.  Low-confidence matches are left blank rather than
+silently attaching the answer of a different question.
+"""
 
+import argparse
+import json
+import os
+import re
+import unicodedata
+from difflib import SequenceMatcher
+
+OUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data"))
 BOOK_RANGES = {
     1: (1, 92), 2: (93, 448), 3: (449, 877), 4: (878, 1112),
     5: (1113, 1184), 6: (1185, 1356), 7: (1357, 1452),
 }
+MIN_SCORE = 0.58
+ARABIC_RE = re.compile(r"[\u0600-\u06ff]")
+QUESTION_WORDS = ("ما ", "ماذا ", "هل ", "كيف ", "لماذا ", "من ", "أين ", "متى ", "أي ")
 
-def strip_ctrl(s):
-    return "".join(c for c in s if ord(c) not in (0x200E,0x200F,0x2028,0x2029,0xFEFF))
 
-def clean_ocr(s):
-    s = re.sub(r'\s+', ' ', s)
-    s = s.replace('|', '').replace('_', '').replace('>', '').replace('<', '')
-    s = re.sub(r'[▯▰▪▸▹►→■●○◎※†‡•‧]', '', s)
-    return s.strip()
+def clean_text(value):
+    value = "".join(c for c in value if ord(c) not in (0x200e, 0x200f, 0x2028, 0x2029, 0xfeff))
+    value = value.replace("|", "").replace("_", " ")
+    return re.sub(r"\s+", " ", value).strip()
 
-def is_digit(c):
-    return c.isdigit() or (unicodedata.name(c, "").startswith("ARABIC-INDIC DIGIT") if c else False)
 
-def ar_to_int(s):
-    result = 0
-    for c in s:
-        if c.isdigit():
-            result = result * 10 + int(c)
-        elif unicodedata.name(c, "").startswith("ARABIC-INDIC DIGIT"):
-            result = result * 10 + (ord(c) - 0x0660)
-        else:
-            break
-    return result if result > 0 else None
+def normalize(value):
+    value = clean_text(value)
+    value = "".join(c for c in value if unicodedata.category(c)[0] not in "PN" and not c.isdigit())
+    value = re.sub(r"[إأآٱ]", "ا", value)
+    return re.sub(r"\s+", " ", value.translate(str.maketrans("ىةؤئ", "يهوي"))).strip()
 
-print("=== Arabic Answer Extraction (v3 - numeric anchors) ===\n")
 
-index_path = os.path.join(OUT_DIR, "arabic_index.json")
-with open(index_path, encoding="utf-8") as f:
-    arabic_index = json.load(f)
+def similarity(question, candidate):
+    left, right = normalize(question), normalize(candidate)
+    if not left or not right:
+        return 0.0
+    ratio = SequenceMatcher(None, left, right).ratio()
+    left_words, right_words = set(left.split()), set(right.split())
+    overlap = len(left_words & right_words) / max(1, len(left_words | right_words))
+    containment = min(len(left), len(right)) / max(len(left), len(right)) if left in right or right in left else 0
+    return max(ratio, 0.65 * ratio + 0.35 * overlap, containment)
 
-all_answers = {}
 
-for book_num in range(1, 8):
-    q_start, q_end = BOOK_RANGES[book_num]
-    ocr_path = os.path.join(OUT_DIR, f"ocr_book{book_num}.txt")
-    if not os.path.exists(ocr_path):
-        continue
+def content_end(lines, first_question):
+    """Exclude the repeated table of contents commonly appended to each PDF."""
+    start = int(len(lines) * 0.70)
+    for index in range(start, len(lines)):
+        if normalize(lines[index]) == normalize("المحتويات"):
+            return index
+    # Volume 3 has no contents heading, but repeats its first question.
+    target = normalize(first_question)
+    for index in range(start, len(lines)):
+        if similarity(target, lines[index]) >= 0.88:
+            return index
+    return len(lines)
 
-    print(f"\nBook {book_num} (Q{q_start}-Q{q_end})")
 
-    with open(ocr_path, encoding="utf-8") as f:
-        book_text = strip_ctrl(f.read())
-
-    # Split into lines
-    raw_lines = book_text.split('\n')
-    lines = [clean_ocr(l) for l in raw_lines if l.strip()]
-
-    # Find lines that likely start with a question number
-    # Pattern: optional punctuation + Arabic/ASCII digits + separator
-    q_pattern = re.compile(r'^[\s\.\,\;\:\"\'\!\*\-]*(\d+)[\s\.\)\:]\s+(.+)')
-    found_qs = []
-
-    for line in lines:
-        m = q_pattern.match(line)
-        if m:
-            num_str = m.group(1)
-            rest = m.group(2).strip()
-            qnum = ar_to_int(num_str)
-            if qnum and q_start <= qnum <= q_end:
-                found_qs.append((qnum, rest, line))
-
-    # Deduplicate by question number (keep first occurrence)
-    seen = {}
-    for qnum, rest, line in found_qs:
-        if qnum not in seen:
-            seen[qnum] = (rest, line)
-
-    found_qs = sorted(seen.items())
-    print(f"  Found {len(found_qs)} questions")
-
-    # Reconstruct full text with position tracking for extraction
-    full_text = '\n'.join(lines)
-
-    # For each question, extract answer by finding position and going to next question
-    answers = {}
-    sorted_qs = sorted(seen.items())
-
-    for i, (qnum, (rest, line)) in enumerate(sorted_qs):
-        # Find this line in the full text
-        idx = full_text.find(line)
-        if idx < 0:
+def question_candidates(lines):
+    candidates = []
+    for index, line in enumerate(lines):
+        text = clean_text(line)
+        normalized = normalize(text)
+        if not ARABIC_RE.search(text) or not 5 <= len(normalized) <= 180:
             continue
+        without_number = re.sub(r"^[\s\d٠-٩.،؛:()\-]+", "", text)
+        looks_like_question = "؟" in text or normalize(without_number).startswith(tuple(normalize(w) for w in QUESTION_WORDS))
+        if looks_like_question:
+            candidates.append((index, text))
+    return candidates
 
-        answer_start = idx + len(line)
 
-        if i + 1 < len(sorted_qs):
-            next_num, (next_rest, next_line) = sorted_qs[i + 1]
-            next_idx = full_text.find(next_line, answer_start)
-            if next_idx > answer_start:
-                answer_end = next_idx
-            else:
-                answer_end = answer_start + 2000  # fallback
+def align_questions(questions, candidates):
+    """Monotonic sequence alignment with optional candidates/questions."""
+    rows, cols = len(questions), len(candidates)
+    # Skipping a likely heading has a small cost; weak matches cost more than a skip.
+    skip_q, skip_c = -0.32, -0.015
+    # Only the previous score row is needed. Traceback actions use one byte
+    # each instead of retaining several large Python object matrices.
+    back = [bytearray(cols + 1) for _ in range(rows + 1)]
+    previous = [j * skip_c for j in range(cols + 1)]
+    for j in range(1, cols + 1):
+        back[0][j] = 3  # candidate skip
+    for i in range(1, rows + 1):
+        current = [i * skip_q] + [0.0] * cols
+        back[i][0] = 2  # question skip
+        for j in range(1, cols + 1):
+            score = similarity(questions[i - 1][1], candidates[j - 1][1])
+            match_reward = (score - MIN_SCORE) * 2.4 + 0.42
+            options = (
+                (previous[j - 1] + match_reward, 1),
+                (previous[j] + skip_q, 2),
+                (current[j - 1] + skip_c, 3),
+            )
+            current[j], back[i][j] = max(options, key=lambda item: item[0])
+        previous = current
+    aligned = {}
+    i, j = rows, cols
+    while i or j:
+        action = back[i][j]
+        if action == 1:
+            score = similarity(questions[i - 1][1], candidates[j - 1][1])
+            if score >= MIN_SCORE:
+                aligned[questions[i - 1][0]] = (candidates[j - 1][0], score)
+            i, j = i - 1, j - 1
+        elif action == 2:
+            i -= 1
         else:
-            answer_end = min(answer_start + 3000, len(full_text))
+            j -= 1
+    return aligned
 
-        answer_text = full_text[answer_start:answer_end]
-        # Take up to next question number or reasonable length
-        answer_text = re.sub(r'\s+', ' ', answer_text).strip()
-        # Remove trailing OCR garbage
-        answer_text = re.sub(r'\s*\d{1,4}\s*$', '', answer_text)
-        # Truncate at reasonable answer length (most answers are 1-3 paragraphs)
-        if len(answer_text) > 3000:
-            answer_text = answer_text[:3000]
 
-        if len(answer_text) > 20:
-            answers[qnum] = answer_text
+def extract_book(book_number, index):
+    start_q, end_q = BOOK_RANGES[book_number]
+    path = os.path.join(OUT_DIR, f"ocr_book{book_number}.txt")
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Missing cached source text: {path}")
+    with open(path, encoding="utf-8") as source:
+        lines = [clean_text(line) for line in source if clean_text(line)]
+    questions = [(q, index[str(q)]) for q in range(start_q, end_q + 1) if index.get(str(q))]
+    end = content_end(lines, questions[0][1])
+    lines = lines[:end]
+    candidates = question_candidates(lines)
+    aligned = align_questions(questions, candidates)
 
-    all_answers[book_num] = answers
-    print(f"  Extracted {len(answers)} answers")
+    ordered = sorted((line, q, score) for q, (line, score) in aligned.items())
+    answers = {}
+    for position, (line, qnum, score) in enumerate(ordered):
+        next_line = ordered[position + 1][0] if position + 1 < len(ordered) else len(lines)
+        # A missing heading would merge two answers. Cap pathological spans and
+        # leave them for review instead of publishing a shifted answer.
+        chunk = clean_text("\n".join(lines[line + 1:next_line]))
+        if 20 <= len(chunk) <= 12000:
+            answers[qnum] = chunk
+    return answers, aligned, len(questions), len(candidates)
 
-# Build final output
-print(f"\n{'='*60}")
-print("Building catechism_qa_ar.json...")
-output = []
-wcq = 0
-wca = 0
-for qnum in range(1, 1453):
-    question = arabic_index.get(str(qnum), "")
-    answer = ""
-    for bn, (qs, qe) in BOOK_RANGES.items():
-        if qs <= qnum <= qe and bn in all_answers:
-            answer = all_answers[bn].get(qnum, "")
-            break
-    output.append({"questionNumber": qnum, "question": question, "answer": answer})
-    if question: wcq += 1
-    if answer: wca += 1
 
-output_path = os.path.join(OUT_DIR, "catechism_qa_ar.json")
-with open(output_path, "w", encoding="utf-8") as f:
-    json.dump(output, f, ensure_ascii=False, indent=2)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true", help="validate only; do not rewrite output")
+    args = parser.parse_args()
+    with open(os.path.join(OUT_DIR, "arabic_index.json"), encoding="utf-8") as source:
+        index = json.load(source)
 
-print(f"Total: {len(output)}, Questions: {wcq}, Answers: {wca}, Both: {sum(1 for q in output if q['question'] and q['answer'])}")
+    all_answers, total_aligned = {}, 0
+    for book_number in BOOK_RANGES:
+        answers, aligned, expected, candidate_count = extract_book(book_number, index)
+        all_answers.update(answers)
+        total_aligned += len(aligned)
+        print(f"Book {book_number}: {len(aligned)}/{expected} headings aligned, "
+              f"{len(answers)} answers ({candidate_count} candidates)")
+
+    output = [
+        {"questionNumber": q, "question": index.get(str(q), ""), "answer": all_answers.get(q, "")}
+        for q in range(1, 1453)
+    ]
+    if len(index) != 1452:
+        print(f"WARNING: Arabic index contains {len(index)}/1452 questions")
+    if total_aligned < 1200:
+        raise SystemExit(f"Refusing output: only {total_aligned}/1452 headings aligned")
+    output_path = os.path.join(OUT_DIR, "catechism_qa_ar.json")
+    if args.check:
+        if not os.path.exists(output_path) or json.load(open(output_path, encoding="utf-8")) != output:
+            raise SystemExit("Arabic dataset is stale; run extractor without --check")
+    else:
+        with open(output_path, "w", encoding="utf-8") as target:
+            json.dump(output, target, ensure_ascii=False, indent=2)
+    print(f"Validated {len(output)} records: {total_aligned} aligned, {len(all_answers)} with answers")
+
+
+if __name__ == "__main__":
+    main()

@@ -25,6 +25,12 @@ async function seedArabic() {
       Object.entries(parsed).map(([k, v]) => [parseInt(k), v])
     );
     console.log(`Loaded ${arabicQuestions.size} Arabic questions from index.\n`);
+    if (arabicQuestions.size !== 1452) {
+      throw new Error(
+        `Arabic index is incomplete (${arabicQuestions.size}/1452). ` +
+        'Refusing to seed misnumbered or missing Arabic questions.'
+      );
+    }
   } else {
     console.log('WARNING: arabic_index.json not found. Question text will be empty.\n');
   }

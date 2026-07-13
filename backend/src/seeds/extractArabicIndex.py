@@ -53,7 +53,7 @@ img_files = sorted(glob.glob(os.path.join(img_dir, "idx*.png")))
 for i, img_file in enumerate(img_files):
     result = subprocess.run(
         ["tesseract", img_file, "stdout", "-l", "ara",
-         "--tessdata-dir", TESSDATA, "--psm", "6"],
+         "--tessdata-dir", TESSDATA, "--psm", "4"],
         capture_output=True, text=True
     )
     all_text += "\n" + strip_control(result.stdout)
@@ -124,21 +124,18 @@ print(f"Found {len(question_lines)} questions with explicit numbers")
 
 # Now infer missing numbers for lines between known numbers
 # Check for sequential gaps and fill in using position
-question_lines.sort(key=lambda x: x[0])
-
-# Verify coverage
-found_nums = set(qn for qn, _ in question_lines)
-missing = [i for i in range(1, 1453) if i not in found_nums]
-if missing:
-    print(f"Missing question numbers: {len(missing)}")
-    print(f"  First 10 missing: {missing[:10]}")
-    print(f"  Last 10 missing: {missing[-10:]}")
-else:
-    print("All 1452 question numbers found!")
+# The printed numbers restart at 1 in every chapter.  Their position in the
+# questions-and-contents PDF, not the printed local number, is the global ID.
+# Sorting/deduplicating here silently overwrote earlier chapters.
+if len(question_lines) != 1452:
+    raise SystemExit(
+        f"Refusing to replace Arabic index: found {len(question_lines)}/1452 "
+        "ordered question lines"
+    )
 
 # ── Write output ────────────────────────────────────────────────────
 os.makedirs(OUT_DIR, exist_ok=True)
-qa_map = {qnum: qtext for qnum, qtext in question_lines}
+qa_map = {global_number: qtext for global_number, (_, qtext) in enumerate(question_lines, 1)}
 with open(os.path.join(OUT_DIR, "arabic_index.json"), "w", encoding="utf-8") as f:
     json.dump(qa_map, f, ensure_ascii=False, indent=2)
 print(f"\nWritten {len(qa_map)} entries to arabic_index.json")
