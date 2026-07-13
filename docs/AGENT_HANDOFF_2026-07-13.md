@@ -6,7 +6,7 @@ Date: 2026-07-13
 
 - Local repository: `/home/gergo/Seagate2/apps/coptic-catechism`
 - GitHub: `boco-cyber/coptic-catechism`, branch `main`
-- Current committed head: `803d242`
+- Last implementation head before this documentation: `803d242`
 - Coolify application: `coptic-catechism-api`
   (`qpu7udejfw6bt6qba7209vo2`)
 - Domain: `https://ccfm.copticfaith.org`
