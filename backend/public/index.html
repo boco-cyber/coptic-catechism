@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Coptic Orthodox Catechism questions and answers in English and Arabic.">
+  <title>Coptic Catechism Q&amp;A</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar" aria-label="Language">
+      <a class="brand" href="/">Coptic Faith</a>
+      <div class="languages"><button data-lang="en">EN</button><button data-lang="ar">العربية</button></div>
+    </nav>
+    <div class="hero-copy">
+      <p class="kicker" data-copy="kicker">Coptic Orthodox Catechesis</p>
+      <h1 data-copy="title">The Coptic Catechism</h1>
+      <p class="author" data-copy="author">Fr. Tadros Y. Malaty</p>
+      <p data-copy="intro">Explore 1,452 questions and answers about the Orthodox Christian faith.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Question browser">
+      <form id="searchForm">
+        <label for="search" data-copy="searchLabel">Search questions</label>
+        <div class="search-row">
+          <input id="search" type="search" minlength="2" data-placeholder="searchPlaceholder" placeholder="Faith, baptism, prayer…">
+          <button type="submit" data-copy="searchButton">Search</button>
+        </div>
+      </form>
+      <div class="range-row">
+        <button id="previous" type="button" data-copy="previous">Previous</button>
+        <p id="status" aria-live="polite"></p>
+        <button id="next" type="button" data-copy="next">Next</button>
+      </div>
+    </section>
+    <section id="notice" class="notice" hidden></section>
+    <section id="questions" class="questions" aria-live="polite"></section>
+  </main>
+  <footer><p data-copy="footer">Catechism of the Coptic Orthodox Church · Questions 1–1452</p></footer>
+  <script src="/app.js" defer></script>
+</body>
+</html>

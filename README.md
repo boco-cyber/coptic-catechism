@@ -20,8 +20,8 @@ The app serves **1,452 questions & answers** organized across **7 books**:
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌──────────────┐
-│   React Web App │────▶│  Express.js API  │────▶│   MongoDB    │
-│ (Oracle Cloud)  │     │ (Oracle Cloud)   │     │   (Atlas)    │
+│ Bilingual Web UI│────▶│  Express.js API  │────▶│   MongoDB    │
+│   (Coolify)     │     │    (Coolify)     │     │   (Atlas)    │
 └─────────────────┘     └─────────────────┘     └──────────────┘
 ┌─────────────────┐            ▲
 │ React Native /  │────────────┘
@@ -59,12 +59,8 @@ npm run seed            # Populate database with catechism content
 npm run dev             # Start development server on :5000
 ```
 
-### Web Frontend Setup
-```bash
-cd frontend
-npm install
-npm start               # Start React dev server on :3000
-```
+The responsive bilingual web interface is served directly by Express from
+`backend/public/` at `/` (English) and `/ar/` (Arabic).
 
 ### Mobile Setup
 ```bash
@@ -103,7 +99,8 @@ GET /api/quiz/1?lang=ar
 
 - Book/chapter titles: swapped with Arabic equivalents (when populated)
 - Questions: served from the parallel `QuestionAr` collection
-- Answers: empty until extracted from Arabic PDFs (see `docs/superpowers/plans/multilingual-backend-v1.md`)
+- Reviewed Arabic answers are shown when populated. Until then, the API and web
+  interface explicitly fall back to the corresponding English answer.
 
 ## Seeding the Database
 
@@ -122,8 +119,10 @@ npm run seed:questions
 
 ## Deployment
 
-- **Oracle Cloud**: See `docs/oracle-deployment.md` for step-by-step OCI setup
-- **Coolify / Docker**: Use the `Dockerfile` in `backend/` for containerized deployment
+- Public domain: `https://ccfm.copticfaith.org`
+- Coolify application: `coptic-catechism-api` (`qpu7udejfw6bt6qba7209vo2`)
+- Repository: `boco-cyber/coptic-catechism`, branch `main`
+- Build: `backend/Dockerfile`, exposed port `5000`
 
 ## License
 

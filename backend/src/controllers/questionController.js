@@ -4,19 +4,64 @@ function getModel(lang) {
   return lang === 'ar' ? QuestionAr : Question;
 }
 
+async function addArabicFallback(items) {
+  const rows = Array.isArray(items) ? items : [items];
+  const numbers = rows.filter(Boolean).map((item) => item.questionNumber);
+  if (!numbers.length) return items;
+
+  const englishRows = await Question.find({ questionNumber: { $in: numbers } })
+    .select('questionNumber question answer')
+    .lean();
+  const english = new Map(englishRows.map((item) => [item.questionNumber, item]));
+
+  for (const item of rows) {
+    if (!item) continue;
+    const fallback = english.get(item.questionNumber);
+    if (!fallback) continue;
+    if (!item.question) item.question = fallback.question;
+    if (!item.answer) {
+      item.answer = fallback.answer;
+      item.answerLanguage = 'en';
+      item.langFallback = true;
+    } else {
+      item.answerLanguage = 'ar';
+      item.langFallback = false;
+    }
+  }
+  return items;
+}
+
+function escapedRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // GET /api/questions/:questionNumber - Get single question
 exports.getQuestion = async (req, res) => {
   try {
     const { questionNumber } = req.params;
     const lang = req.query.lang;
     const Model = getModel(lang);
+    let usedEnglishFallback = false;
 
-    const question = await Model.findOne({
+    let question = await Model.findOne({
       questionNumber: parseInt(questionNumber)
     })
       .populate('book', 'bookNumber title titleAr')
       .populate('chapter', 'chapterNumber title titleAr')
       .lean();
+
+    if (!question && lang === 'ar') {
+      question = await Question.findOne({ questionNumber: parseInt(questionNumber) })
+        .populate('book', 'bookNumber title titleAr')
+        .populate('chapter', 'chapterNumber title titleAr')
+        .lean();
+      if (question) {
+        usedEnglishFallback = true;
+        question.langFallback = true;
+        question.questionLanguage = 'en';
+        question.answerLanguage = 'en';
+      }
+    }
 
     if (!question) {
       return res.status(404).json({ success: false, error: 'Question not found' });
@@ -27,6 +72,7 @@ exports.getQuestion = async (req, res) => {
       if (question.book && question.book.titleAr) {
         question.book.title = question.book.titleAr;
       }
+      if (!usedEnglishFallback) await addArabicFallback(question);
       if (question.chapter && question.chapter.titleAr) {
         question.chapter.title = question.chapter.titleAr;
       }
@@ -58,7 +104,7 @@ exports.getQuestionRange = async (req, res) => {
     const lang = req.query.lang;
     const Model = getModel(lang);
 
-    const questions = await Model.find({
+    let questions = await Model.find({
       questionNumber: {
         $gte: parseInt(start),
         $lte: parseInt(end)
@@ -76,6 +122,22 @@ exports.getQuestionRange = async (req, res) => {
         delete q.book?.titleAr;
         delete q.chapter?.titleAr;
       }
+      await addArabicFallback(questions);
+
+      const englishRows = await Question.find({
+        questionNumber: { $gte: parseInt(start), $lte: parseInt(end) }
+      })
+        .sort({ questionNumber: 1 })
+        .populate('book', 'bookNumber title titleAr')
+        .populate('chapter', 'chapterNumber title titleAr')
+        .lean();
+      const arabicByNumber = new Map(questions.map((item) => [item.questionNumber, item]));
+      questions = englishRows.map((english) => arabicByNumber.get(english.questionNumber) || {
+        ...english,
+        langFallback: true,
+        questionLanguage: 'en',
+        answerLanguage: 'en'
+      });
     }
 
     res.json({ success: true, count: questions.length, data: questions });
@@ -98,9 +160,12 @@ exports.searchQuestions = async (req, res) => {
       });
     }
 
-    const filter = {
-      $text: { $search: q.trim() }
-    };
+    const filter = lang === 'ar'
+      ? { $or: [
+          { question: { $regex: escapedRegex(q.trim()), $options: 'i' } },
+          { answer: { $regex: escapedRegex(q.trim()), $options: 'i' } }
+        ] }
+      : { $text: { $search: q.trim() } };
 
     if (book) {
       filter.bookNumber = parseInt(book);
@@ -108,9 +173,11 @@ exports.searchQuestions = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
+    const projection = lang === 'ar' ? {} : { score: { $meta: 'textScore' } };
+    const sort = lang === 'ar' ? { questionNumber: 1 } : { score: { $meta: 'textScore' } };
     const [questions, total] = await Promise.all([
-      Model.find(filter, { score: { $meta: 'textScore' } })
-        .sort({ score: { $meta: 'textScore' } })
+      Model.find(filter, projection)
+        .sort(sort)
         .skip(skip)
         .limit(parseInt(limit))
         .populate('book', 'bookNumber title titleAr')
@@ -126,6 +193,7 @@ exports.searchQuestions = async (req, res) => {
         delete q.book?.titleAr;
         delete q.chapter?.titleAr;
       }
+      await addArabicFallback(questions);
     }
 
     res.json({

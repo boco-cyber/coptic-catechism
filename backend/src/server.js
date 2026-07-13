@@ -21,6 +21,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // ── Routes ────────────────────────────────────────────────────────
 app.use('/api', apiRoutes);
@@ -28,6 +29,10 @@ app.use('/api', apiRoutes);
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get(['/ar', '/ar/'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // 404 handler
