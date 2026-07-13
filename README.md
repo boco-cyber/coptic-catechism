@@ -1,5 +1,7 @@
 # Coptic Catechism App
 
+Continuation handoff: [`docs/AGENT_HANDOFF_2026-07-13.md`](docs/AGENT_HANDOFF_2026-07-13.md).
+
 A public catechesis educational platform based on **"Catechism of the Coptic Orthodox Church"** by Fr. Tadros Yacoub Malaty (Volumes 1 & 2, 2023 Edition).
 
 ## Content Structure
