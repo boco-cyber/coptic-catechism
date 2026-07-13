@@ -112,7 +112,9 @@ async function seedArabic() {
 
     const book = bookDocs[bookData.bookNumber];
     const chapter = chapterDocs[`${chapData.bookNumber}-${chapData.chapterNumber}`];
-    const arText = arabicQuestions.get(qNum) || '';
+    const arText = arabicQuestions.get(qNum);
+
+    if (!arText) continue;
 
     bulk.push({
       questionNumber: qNum,
