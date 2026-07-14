@@ -7,6 +7,9 @@ backend/data/ocr_book*.txt
 # Intermediate Arabic extraction output
 backend/data/arabic_chapters.json
 
+# Generated Arabic verification artifacts (rendered pages, transcripts, reports)
+backend/data/verification/
+
 # macOS
 .DS_Store
 
