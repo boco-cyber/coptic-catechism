@@ -4,5 +4,9 @@ node_modules/
 # Raw OCR output (reproducible from PDFs)
 backend/data/ocr_book*.txt
 
+# Untracked Arabic extraction output (needs theological review before committing)
+backend/data/arabic_chapters.json
+backend/data/catechism_qa_ar.json
+
 # macOS
 .DS_Store

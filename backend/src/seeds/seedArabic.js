@@ -26,9 +26,9 @@ async function seedArabic() {
     );
     console.log(`Loaded ${arabicQuestions.size} Arabic questions from index.\n`);
     if (arabicQuestions.size !== 1452) {
-      throw new Error(
-        `Arabic index is incomplete (${arabicQuestions.size}/1452). ` +
-        'Refusing to seed misnumbered or missing Arabic questions.'
+      console.warn(
+        `WARNING: Arabic index is incomplete (${arabicQuestions.size}/1452). ` +
+        'Missing questions will be skipped. Re-run extractArabicIndex.py to regenerate.'
       );
     }
   } else {

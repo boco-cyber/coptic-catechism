@@ -165,6 +165,17 @@ def main():
         print(f"WARNING: Arabic index contains {len(index)}/1452 questions")
     if total_aligned < 1200:
         raise SystemExit(f"Refusing output: only {total_aligned}/1452 headings aligned")
+    # Validate that all extracted answers have reasonable content
+    bad_answers = 0
+    for entry in output:
+        if entry["answer"]:
+            # Flag answers that contain embedded question numbers or are too short
+            if re.search(r'\n\d{2,4}\s*\.\s', entry["answer"]) or len(entry["answer"]) < 30:
+                print(f"WARNING: Q{entry['questionNumber']} answer looks corrupted, clearing it")
+                entry["answer"] = ""
+                bad_answers += 1
+    if bad_answers:
+        print(f"Cleared {bad_answers} corrupted answers")
     output_path = os.path.join(OUT_DIR, "catechism_qa_ar.json")
     if args.check:
         if not os.path.exists(output_path) or json.load(open(output_path, encoding="utf-8")) != output:
