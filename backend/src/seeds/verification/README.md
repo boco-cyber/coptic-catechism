@@ -15,3 +15,6 @@ Useful scoped runs include `--book 1` for rendering/transcription and
 `--provider nvidia` to retry failures through the fallback provider. Generated
 pages, transcripts, and reports are under `backend/data/verification/` and are
 gitignored. Set `ARABIC_PDF_DIR` if the source PDFs move.
+
+An OpenCode-style provider export can be used without copying secrets into the
+repository: `python3 transcribe_pages.py --provider openai --key-file /path/to/keys.json`.
