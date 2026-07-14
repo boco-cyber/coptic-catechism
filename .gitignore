@@ -9,3 +9,7 @@ backend/data/arabic_chapters.json
 
 # macOS
 .DS_Store
+
+# Local secrets — never commit
+backend/.env
+New Text Document.txt
