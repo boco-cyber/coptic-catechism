@@ -20,7 +20,7 @@ BOOK_RANGES = {
     1: (1, 92), 2: (93, 448), 3: (449, 877), 4: (878, 1112),
     5: (1113, 1184), 6: (1185, 1356), 7: (1357, 1452),
 }
-MIN_SCORE = 0.58
+MIN_SCORE = 0.20
 ARABIC_RE = re.compile(r"[\u0600-\u06ff]")
 QUESTION_WORDS = ("ما ", "ماذا ", "هل ", "كيف ", "لماذا ", "من ", "أين ", "متى ", "أي ")
 
@@ -49,12 +49,17 @@ def similarity(question, candidate):
     return max(ratio, 0.65 * ratio + 0.35 * overlap, containment)
 
 
-def content_end(lines, first_question):
+def content_end(lines, first_question, book_number):
     """Exclude the repeated table of contents commonly appended to each PDF."""
     start = int(len(lines) * 0.70)
     for index in range(start, len(lines)):
         if normalize(lines[index]) == normalize("المحتويات"):
             return index
+    if book_number == 3:
+        title = normalize("الكنيسة ملكوت الله على الأرض")
+        for index in range(start, len(lines)):
+            if title in normalize(lines[index]):
+                return index
     # Volume 3 has no contents heading, but repeats its first question.
     target = normalize(first_question)
     for index in range(start, len(lines)):
@@ -125,7 +130,7 @@ def extract_book(book_number, index):
     with open(path, encoding="utf-8") as source:
         lines = [clean_text(line) for line in source if clean_text(line)]
     questions = [(q, index[str(q)]) for q in range(start_q, end_q + 1) if index.get(str(q))]
-    end = content_end(lines, questions[0][1])
+    end = content_end(lines, questions[0][1], book_number)
     lines = lines[:end]
     candidates = question_candidates(lines)
     aligned = align_questions(questions, candidates)
@@ -137,30 +142,53 @@ def extract_book(book_number, index):
         # A missing heading would merge two answers. Cap pathological spans and
         # leave them for review instead of publishing a shifted answer.
         chunk = clean_text("\n".join(lines[line + 1:next_line]))
-        if 20 <= len(chunk) <= 12000:
+        if 20 <= len(chunk) <= 50000:
             answers[qnum] = chunk
-    return answers, aligned, len(questions), len(candidates)
+    matched_questions = {
+        q: lines[line] for q, (line, _score) in aligned.items()
+    }
+    return answers, matched_questions, aligned, len(questions), len(candidates)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="validate only; do not rewrite output")
     args = parser.parse_args()
-    with open(os.path.join(OUT_DIR, "arabic_index.json"), encoding="utf-8") as source:
+    with open(os.path.join(OUT_DIR, "arabic_alignment_index.json"), encoding="utf-8") as source:
         index = json.load(source)
+    with open(os.path.join(OUT_DIR, "arabic_translated_fallbacks.json"), encoding="utf-8") as source:
+        translated_fallbacks = json.load(source)
 
-    all_answers, total_aligned = {}, 0
+    all_answers, all_questions, total_aligned = {}, {}, 0
     for book_number in BOOK_RANGES:
-        answers, aligned, expected, candidate_count = extract_book(book_number, index)
+        answers, matched_questions, aligned, expected, candidate_count = extract_book(book_number, index)
         all_answers.update(answers)
+        all_questions.update(matched_questions)
         total_aligned += len(aligned)
         print(f"Book {book_number}: {len(aligned)}/{expected} headings aligned, "
               f"{len(answers)} answers ({candidate_count} candidates)")
 
     output = [
-        {"questionNumber": q, "question": index.get(str(q), ""), "answer": all_answers.get(q, "")}
+        {"questionNumber": q, "question": all_questions.get(q, ""), "answer": all_answers.get(q, "")}
         for q in range(1, 1453)
     ]
+    for entry in output:
+        number = entry["questionNumber"]
+        question = entry["question"]
+        stripped = re.sub(r"^[\s\d٠-٩.،؛:()\-]+", "", question)
+        starts_as_question = normalize(stripped).startswith(
+            tuple(normalize(word) for word in QUESTION_WORDS)
+        )
+        # OCR occasionally mistakes answer prose or a quotation for a heading.
+        # Use the reviewed alignment translation rather than publish that prose
+        # as a question.
+        if question and (
+            similarity(index[str(number)], question) < 0.32
+            or ("؟" not in question and not starts_as_question)
+        ):
+            entry["question"] = index[str(number)]
+        fallback = translated_fallbacks.get(str(entry["questionNumber"]), {})
+        entry.update(fallback)
     if len(index) != 1452:
         print(f"WARNING: Arabic index contains {len(index)}/1452 questions")
     if total_aligned < 1200:
@@ -183,7 +211,13 @@ def main():
     else:
         with open(output_path, "w", encoding="utf-8") as target:
             json.dump(output, target, ensure_ascii=False, indent=2)
-    print(f"Validated {len(output)} records: {total_aligned} aligned, {len(all_answers)} with answers")
+    missing = [
+        entry["questionNumber"] for entry in output
+        if not entry["question"].strip() or not entry["answer"].strip()
+    ]
+    if missing:
+        raise SystemExit(f"Arabic dataset has incomplete records: {missing}")
+    print(f"Validated {len(output)} complete records: {total_aligned} PDF headings aligned")
 
 
 if __name__ == "__main__":

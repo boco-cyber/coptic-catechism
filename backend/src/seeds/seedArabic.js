@@ -14,26 +14,25 @@ async function seedArabic() {
   await QuestionAr.deleteMany({});
   console.log('Cleared existing QuestionAr data.\n');
 
-  // Load Arabic index (questions)
-  const indexPath = path.join(__dirname, '../../data/arabic_index.json');
-  let arabicQuestions = new Map();
-  const hasIndex = fs.existsSync(indexPath);
-  if (hasIndex) {
-    const raw = fs.readFileSync(indexPath, 'utf8');
-    const parsed = JSON.parse(raw);
-    arabicQuestions = new Map(
-      Object.entries(parsed).map(([k, v]) => [parseInt(k), v])
-    );
-    console.log(`Loaded ${arabicQuestions.size} Arabic questions from index.\n`);
-    if (arabicQuestions.size !== 1452) {
-      console.warn(
-        `WARNING: Arabic index is incomplete (${arabicQuestions.size}/1452). ` +
-        'Missing questions will be skipped. Re-run extractArabicIndex.py to regenerate.'
-      );
-    }
-  } else {
-    console.log('WARNING: arabic_index.json not found. Question text will be empty.\n');
+  // Load the complete Arabic Q&A extraction.
+  const qaPath = path.join(__dirname, '../../data/catechism_qa_ar.json');
+  if (!fs.existsSync(qaPath)) {
+    throw new Error('catechism_qa_ar.json not found. Run extractArabicAnswers.py first.');
   }
+  const arabicQa = JSON.parse(fs.readFileSync(qaPath, 'utf8'));
+  if (arabicQa.length !== 1452) {
+    throw new Error(`Arabic dataset is incomplete (${arabicQa.length}/1452 records).`);
+  }
+  const arabicQuestions = new Map(
+    arabicQa.map(row => [row.questionNumber, row])
+  );
+  for (let qNum = 1; qNum <= 1452; qNum++) {
+    const row = arabicQuestions.get(qNum);
+    if (!row || !row.question?.trim() || !row.answer?.trim()) {
+      throw new Error(`Arabic Q${qNum} is missing its question or answer.`);
+    }
+  }
+  console.log(`Loaded and validated ${arabicQuestions.size} Arabic Q&A records.\n`);
 
   // Load Arabic book/chapter titles if available
   const titlesPath = path.join(__dirname, '../../data/arabic_titles.json');
@@ -124,8 +123,8 @@ async function seedArabic() {
 
     bulk.push({
       questionNumber: qNum,
-      question: arText,
-      answer: '',
+      question: arText.question,
+      answer: arText.answer,
       book: book._id,
       chapter: chapter._id,
       bookNumber: bookData.bookNumber,
@@ -155,8 +154,6 @@ async function seedArabic() {
   console.log(`  With question text: ${filled}`);
   console.log(`  With answer text: ${withAnswer}`);
   console.log('─────────────────────────────────────');
-  console.log('\nNext step: Extract Arabic answers from book PDFs.\n');
-
   await mongoose.connection.close();
 }
 
