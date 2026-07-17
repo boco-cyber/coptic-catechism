@@ -8,14 +8,21 @@
     "start": "node src/server.js",
     "seed": "node src/seeds/seedDatabase.js",
     "seed:questions": "node src/seeds/extractAndSeed.js",
-    "seed:arabic": "node src/seeds/seedArabic.js"
+    "seed:arabic": "node src/seeds/seedArabic.js",
+    "test": "node --test"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
     "express": "^4.21.0",
+    "express-rate-limit": "^8.6.0",
+    "express-session": "^1.19.0",
     "mongoose": "^8.5.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^2.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
