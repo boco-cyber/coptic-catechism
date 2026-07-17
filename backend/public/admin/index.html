@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · Coptic Catechism</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<header class="admin-header">
+  <h1>Coptic Catechism Admin</h1>
+  <div id="stats" class="stats"></div>
+  <button id="logout" type="button">Log out</button>
+</header>
+
+<nav class="tabs">
+  <button data-tab="browse" class="active" type="button">Browse &amp; Edit</button>
+  <button data-tab="import" type="button">Import / Export</button>
+</nav>
+
+<main>
+  <section data-panel="browse">
+    <form id="browseFilters" class="filters">
+      <label>Book <input type="number" name="book" min="1" max="7"></label>
+      <label>Chapter <input type="text" name="chapter"></label>
+      <label>Needs review
+        <select name="needsReview">
+          <option value="">Any</option>
+          <option value="true">Needs review</option>
+          <option value="false">Reviewed</option>
+        </select>
+      </label>
+      <label>Search <input type="text" name="q" placeholder="keyword…"></label>
+      <button type="submit">Filter</button>
+    </form>
+    <p id="browseStatus" class="status"></p>
+    <table id="browseTable">
+      <thead>
+        <tr><th>#</th><th>Book</th><th>English</th><th>Arabic</th><th>Status</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="pager">
+      <button id="browsePrev" type="button">Previous</button>
+      <button id="browseNext" type="button">Next</button>
+    </div>
+  </section>
+
+  <section data-panel="import" hidden>
+    <h2>Export</h2>
+    <form id="exportFilters" class="filters">
+      <label>Book <input type="number" name="book" min="1" max="7"></label>
+      <label>Chapter <input type="text" name="chapter"></label>
+      <label>Needs review
+        <select name="needsReview">
+          <option value="">Any</option>
+          <option value="true">Needs review</option>
+          <option value="false">Reviewed</option>
+        </select>
+      </label>
+    </form>
+    <button id="downloadTemplate" type="button">Download template (.xlsx)</button>
+
+    <h2>Import</h2>
+    <input id="importFile" type="file" accept=".xlsx">
+    <div class="import-actions">
+      <button id="previewImport" type="button">Preview changes</button>
+      <button id="confirmImport" type="button" disabled>Confirm import</button>
+    </div>
+    <p id="importStatus" class="status"></p>
+    <div id="importDiff"></div>
+  </section>
+</main>
+
+<div id="editPanel" class="edit-panel" hidden>
+  <div class="edit-panel-inner">
+    <div class="edit-panel-header">
+      <h2 id="editTitle">Question</h2>
+      <button id="editClose" type="button">&times;</button>
+    </div>
+    <form id="editForm">
+      <div class="edit-grid">
+        <label>English question
+          <textarea name="question_en" rows="3"></textarea>
+        </label>
+        <label class="rtl">Arabic question
+          <textarea name="question_ar" rows="3" dir="rtl"></textarea>
+        </label>
+        <label>English answer
+          <textarea name="answer_en" rows="10"></textarea>
+        </label>
+        <label class="rtl">Arabic answer
+          <textarea name="answer_ar" rows="10" dir="rtl"></textarea>
+        </label>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" name="needsReview"> Still needs review
+      </label>
+      <div id="editError" class="error" hidden></div>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

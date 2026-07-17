@@ -1,0 +1,152 @@
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --border: #d9d9d4;
+  --text: #1f1f1f;
+  --muted: #6b6b63;
+  --accent: #7a3b2e;
+  --warn-bg: #fbe9d7;
+  --warn-text: #8a4b12;
+  --ok-bg: #e4f0e1;
+  --ok-text: #2f6b28;
+  --error: #b3261e;
+  font-family: -apple-system, "Segoe UI", Tahoma, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17181a;
+    --surface: #212226;
+    --border: #35363b;
+    --text: #ececec;
+    --muted: #9a9a9a;
+    --accent: #d68a6f;
+    --warn-bg: #3a2c17;
+    --warn-text: #e2b073;
+    --ok-bg: #1d2f1c;
+    --ok-text: #8fd188;
+    --error: #ff6b63;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; background: var(--bg); color: var(--text); }
+
+.login-body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  width: min(360px, 90vw);
+}
+
+.login-card form { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.login-card input, .filters input, .filters select, textarea {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  font: inherit;
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+button[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-header h1 { font-size: 1.1rem; margin: 0; flex: 1; }
+.stats { color: var(--muted); font-size: 0.9rem; }
+
+.tabs { display: flex; gap: 0.5rem; padding: 0.75rem 1.5rem; }
+
+.tabs button { background: transparent; color: var(--muted); border: 1px solid transparent; }
+.tabs button.active { background: var(--surface); color: var(--text); border-color: var(--border); }
+
+main { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: end; margin-bottom: 1rem; }
+.filters label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; color: var(--muted); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--warn-bg); }
+
+.snippet { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.badge { padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
+.badge-warn { background: var(--warn-bg); color: var(--warn-text); }
+.badge-ok { background: var(--ok-bg); color: var(--ok-text); }
+
+.pager { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+.status { color: var(--muted); font-size: 0.9rem; }
+.error { color: var(--error); font-size: 0.9rem; }
+
+.edit-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.edit-panel-inner {
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  width: min(900px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.edit-panel-header { display: flex; justify-content: space-between; align-items: center; }
+.edit-panel-header button { background: transparent; color: var(--muted); font-size: 1.5rem; line-height: 1; padding: 0 0.25rem; }
+
+.edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.edit-grid label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+.edit-grid textarea { resize: vertical; }
+.rtl textarea { text-align: right; }
+
+.checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.9rem; }
+
+#importDiff table { margin-top: 1rem; }
+.old-value { color: var(--error); }
+.new-value { color: var(--ok-text); }
+.error-row { color: var(--error); }
+
+@media (max-width: 720px) {
+  .edit-grid { grid-template-columns: 1fr; }
+}
