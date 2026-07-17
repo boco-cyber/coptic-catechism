@@ -65,6 +65,26 @@ def content_end(lines, first_question, book_number):
     for index in range(start, len(lines)):
         if similarity(target, lines[index]) >= 0.88:
             return index
+    # Fallback: detect summary sections where ≥8 numbered questions appear
+    # within 3 lines of each other (indicating a reference list, not content).
+    numbered = re.compile(r"^[\*\s]*[٠-٩]+[\.\s\-–—]+")
+    nq_positions = [i for i, t in enumerate(lines) if numbered.match(t) and "؟" in t]
+    run_start = None
+    for i in range(1, len(nq_positions)):
+        gap = nq_positions[i] - nq_positions[i - 1]
+        if gap <= 3:
+            if run_start is None:
+                run_start = nq_positions[i - 1]
+        else:
+            if run_start is not None:
+                count_in_run = sum(1 for p in nq_positions if run_start <= p <= nq_positions[i - 1])
+                if count_in_run >= 8 and run_start >= start:
+                    return run_start
+            run_start = None
+    if run_start is not None and run_start >= start:
+        count_in_run = sum(1 for p in nq_positions if p >= run_start)
+        if count_in_run >= 8:
+            return run_start
     return len(lines)
 
 
