@@ -125,7 +125,7 @@ def align_questions(questions, candidates):
 def numbered_question_lines(lines):
     """Return indices of lines that look like main numbered questions."""
     result = set()
-    numbered = re.compile(r"^[\*\s]*[\d٠-٩]+[\.\s\-–—]+")
+    numbered = re.compile(r"^[\*\s]*[٠-٩]+[\.\s\-–—]+")
     for idx, text in enumerate(lines):
         if numbered.match(text) and "؟" in text:
             result.add(idx)
