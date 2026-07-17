@@ -122,6 +122,16 @@ def align_questions(questions, candidates):
     return aligned
 
 
+def numbered_question_lines(lines):
+    """Return indices of lines that look like main numbered questions."""
+    result = set()
+    numbered = re.compile(r"^[\*\s]*[\d٠-٩]+[\.\s\-–—]+")
+    for idx, text in enumerate(lines):
+        if numbered.match(text) and "؟" in text:
+            result.add(idx)
+    return result
+
+
 def extract_book(book_number, index):
     start_q, end_q = BOOK_RANGES[book_number]
     path = os.path.join(OUT_DIR, f"ocr_book{book_number}.txt")
@@ -135,14 +145,18 @@ def extract_book(book_number, index):
     candidates = question_candidates(lines)
     aligned = align_questions(questions, candidates)
 
+    nql = numbered_question_lines(lines)
+
     ordered = sorted((line, q, score) for q, (line, score) in aligned.items())
     answers = {}
     for position, (line, qnum, score) in enumerate(ordered):
-        next_line = ordered[position + 1][0] if position + 1 < len(ordered) else len(lines)
-        # A missing heading would merge two answers. Cap pathological spans and
-        # leave them for review instead of publishing a shifted answer.
+        next_line = len(lines)
+        for nl in sorted(nql):
+            if nl > line:
+                next_line = nl
+                break
         chunk = clean_text("\n".join(lines[line + 1:next_line]))
-        if 20 <= len(chunk) <= 50000:
+        if 20 <= len(chunk) <= 500000:
             answers[qnum] = chunk
     matched_questions = {
         q: lines[line] for q, (line, _score) in aligned.items()
