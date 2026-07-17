@@ -3,14 +3,21 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const session = require('express-session');
+const { MongoStore } = require('connect-mongo');
 const connectDB = require('../config/db');
 const apiRoutes = require('./routes/api');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ── Connect to MongoDB ────────────────────────────────────────────
 connectDB();
+
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET must be set when NODE_ENV=production');
+}
 
 // ── Middleware ─────────────────────────────────────────────────────
 app.use(cors({
@@ -21,10 +28,28 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(morgan('dev'));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'dev-only-insecure-secret',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'admin_sessions'
+  }),
+  cookie: {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 8 * 60 * 60 * 1000 // 8 hours
+  }
+}));
+
 app.use(express.static(path.join(__dirname, '../public')));
 
 // ── Routes ────────────────────────────────────────────────────────
 app.use('/api', apiRoutes);
+app.use('/admin/api', adminRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
