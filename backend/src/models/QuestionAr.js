@@ -56,7 +56,18 @@ const questionArSchema = new mongoose.Schema({
     type: String,
     trim: true,
     lowercase: true
-  }]
+  }],
+  needsReview: {
+    type: Boolean,
+    default: false
+  },
+  reviewedBy: {
+    type: String,
+    trim: true
+  },
+  reviewedAt: {
+    type: Date
+  }
 }, {
   timestamps: true
 });
@@ -79,5 +90,6 @@ questionArSchema.index({ questionNumber: 1 });
 questionArSchema.index({ book: 1, questionNumber: 1 });
 questionArSchema.index({ chapter: 1, questionNumber: 1 });
 questionArSchema.index({ bookNumber: 1 });
+questionArSchema.index({ needsReview: 1 });
 
 module.exports = mongoose.model('QuestionAr', questionArSchema);
