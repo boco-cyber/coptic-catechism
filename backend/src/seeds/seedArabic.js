@@ -26,11 +26,16 @@ async function seedArabic() {
   const arabicQuestions = new Map(
     arabicQa.map(row => [row.questionNumber, row])
   );
+  let missingAnswerCount = 0;
   for (let qNum = 1; qNum <= 1452; qNum++) {
     const row = arabicQuestions.get(qNum);
-    if (!row || !row.question?.trim() || !row.answer?.trim()) {
-      throw new Error(`Arabic Q${qNum} is missing its question or answer.`);
+    if (!row || !row.question?.trim()) {
+      throw new Error(`Arabic Q${qNum} is missing its question.`);
     }
+    if (!row.answer?.trim()) missingAnswerCount++;
+  }
+  if (missingAnswerCount > 0) {
+    console.log(`${missingAnswerCount} question(s) have no Arabic answer yet; the API falls back to English for these until reviewed.\n`);
   }
   console.log(`Loaded and validated ${arabicQuestions.size} Arabic Q&A records.\n`);
 
