@@ -79,7 +79,6 @@ questionSchema.index({
 });
 
 // Index for fast lookups
-questionSchema.index({ questionNumber: 1 });
 questionSchema.index({ book: 1, questionNumber: 1 });
 questionSchema.index({ chapter: 1, questionNumber: 1 });
 questionSchema.index({ bookNumber: 1 });

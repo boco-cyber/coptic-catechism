@@ -51,7 +51,4 @@ bookSchema.virtual('chapters', {
   foreignField: 'book'
 });
 
-// Index for fast lookups
-bookSchema.index({ bookNumber: 1 });
-
 module.exports = mongoose.model('Book', bookSchema);

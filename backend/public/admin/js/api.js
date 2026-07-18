@@ -1,6 +1,6 @@
 const BASE = '/admin/api';
 
-async function request(path, { method = 'GET', body, isForm = false } = {}) {
+async function request(path, { method = 'GET', body, isForm = false, redirectOnUnauthorized = true } = {}) {
   const headers = {};
   if (method !== 'GET') headers['X-Requested-With'] = 'admin-ui';
   if (body && !isForm) headers['Content-Type'] = 'application/json';
@@ -12,7 +12,7 @@ async function request(path, { method = 'GET', body, isForm = false } = {}) {
     body: body ? (isForm ? body : JSON.stringify(body)) : undefined
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 && redirectOnUnauthorized) {
     window.location.href = '/admin/login.html';
     throw new Error('Not authenticated');
   }
@@ -32,7 +32,11 @@ async function request(path, { method = 'GET', body, isForm = false } = {}) {
 
 export const api = {
   me: () => request('/me'),
-  login: (username, password) => request('/login', { method: 'POST', body: { username, password } }),
+  login: (username, password) => request('/login', {
+    method: 'POST',
+    body: { username, password },
+    redirectOnUnauthorized: false
+  }),
   logout: () => request('/logout', { method: 'POST' }),
   listQuestions: (params) => request(`/questions?${new URLSearchParams(params)}`),
   getQuestion: (questionNumber) => request(`/questions/${questionNumber}`),

@@ -86,7 +86,6 @@ questionArSchema.index({
   name: 'search_index_ar'
 });
 
-questionArSchema.index({ questionNumber: 1 });
 questionArSchema.index({ book: 1, questionNumber: 1 });
 questionArSchema.index({ chapter: 1, questionNumber: 1 });
 questionArSchema.index({ bookNumber: 1 });
