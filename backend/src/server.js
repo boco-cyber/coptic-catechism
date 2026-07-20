@@ -12,6 +12,12 @@ const adminRoutes = require('./routes/admin');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Production traffic is terminated by the deployment's reverse proxy. Trust
+// its first hop so express-session can recognize HTTPS and issue Secure cookies.
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // ── Connect to MongoDB ────────────────────────────────────────────
 connectDB();
 
