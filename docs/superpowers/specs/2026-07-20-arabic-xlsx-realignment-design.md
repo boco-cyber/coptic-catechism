@@ -68,8 +68,8 @@ Output → `backend/data/verification/catechism_qa_ar_xlsx.json`.
    similarity while keeping assignments in reading order, tolerating the xlsx having a few
    more or fewer rows per book than the app does.
 4. Adoption rule per app question number: if the best-aligned xlsx row's similarity clears a
-   floor threshold (starting point ~0.35 token-set ratio, tunable during implementation based
-   on observed score distribution), adopt the xlsx question+answer text. If nothing clears the
+   floor threshold (0.70 token-set ratio, selected after review of the real score distribution),
+   adopt the xlsx question+answer text. If nothing clears the
    floor (no confident match — expected to be rare), keep the current text unchanged. Either
    way the question always ends up with a value; nothing blocks on this and no manual gate
    exists.

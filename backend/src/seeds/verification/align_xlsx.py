@@ -14,14 +14,23 @@ otherwise the current text unchanged. No manual review gate.
 
 Usage:
     python3 align_xlsx.py
+
+Set ARABIC_ALIGNMENT_BASE to a pre-rebuild dataset when rerunning the
+pipeline; otherwise the current dataset is used as the alignment/fallback
+baseline.
 """
 
+import os
 from collections import Counter, defaultdict
+from pathlib import Path
 
 from common import BOOK_RANGES, DATA_DIR, WORK_DIR, book_for_question, load_json, write_json
 from compare_datasets import similarity
 
-FLOOR = 0.35
+# Real-data review found semantic off-by-one matches as high as 0.654.  The
+# distribution is strongly bimodal (almost all good matches score >= 0.85),
+# so 0.70 safely falls back instead of adopting a neighboring Q&A pair.
+FLOOR = 0.70
 BUFFER = 15
 
 
@@ -77,7 +86,8 @@ def align_book(app_entries, candidates, floor: float = FLOOR) -> dict:
 
 
 def main() -> None:
-    current = load_json(DATA_DIR / "catechism_qa_ar.json")
+    baseline_path = Path(os.environ.get("ARABIC_ALIGNMENT_BASE", DATA_DIR / "catechism_qa_ar.json"))
+    current = load_json(baseline_path)
     xlsx_rows = load_json(WORK_DIR / "catechism_qa_ar_xlsx.json")
     current_by_number = {row["questionNumber"]: row for row in current}
     xlsx_rows.sort(key=lambda row: row["questionNumber"])
@@ -98,14 +108,16 @@ def main() -> None:
     output = []
     adopted_count = 0
     by_book = defaultdict(Counter)
+    scores_by_book = defaultdict(list)
     for number in range(1, 1453):
         book = book_for_question(number)
         if number in all_aligned:
-            xlsx_number, _score = all_aligned[number]
+            xlsx_number, score = all_aligned[number]
             source = xlsx_by_number[xlsx_number]
             output.append({"questionNumber": number, "question": source["question"], "answer": source["answer"]})
             adopted_count += 1
             by_book[book]["adopted"] += 1
+            scores_by_book[book].append(score)
         else:
             fallback = current_by_number[number]
             output.append({"questionNumber": number, "question": fallback["question"], "answer": fallback["answer"]})
@@ -117,11 +129,18 @@ def main() -> None:
         "# Arabic xlsx alignment report", "",
         f"Adopted: {adopted_count}/1452",
         f"Kept current (no confident match): {1452 - adopted_count}/1452", "",
-        "| Book | Adopted | Kept current |", "|---:|---:|---:|",
+        "| Book | Adopted | Kept current | Avg similarity | Min similarity |",
+        "|---:|---:|---:|---:|---:|",
     ]
     for book in range(1, 8):
         counts = by_book[book]
-        lines.append(f"| {book} | {counts['adopted']} | {counts['fallback']} |")
+        scores = scores_by_book[book]
+        average = sum(scores) / len(scores) if scores else 0.0
+        minimum = min(scores) if scores else 0.0
+        lines.append(
+            f"| {book} | {counts['adopted']} | {counts['fallback']} | "
+            f"{average:.3f} | {minimum:.3f} |"
+        )
     (WORK_DIR / "xlsx_alignment_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Adopted {adopted_count}/1452; wrote backend/data/catechism_qa_ar.json and xlsx_alignment_report.md")
 

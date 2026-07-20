@@ -70,6 +70,8 @@ def validate(rows: list[dict]) -> None:
             raise SystemExit(f"Row {row['questionNumber']} has out-of-range part: {row['part']}")
         if not row["question"]:
             raise SystemExit(f"Row {row['questionNumber']} has an empty question")
+        if not row["answer"]:
+            raise SystemExit(f"Row {row['questionNumber']} has an empty answer")
 
 
 def main() -> None:
