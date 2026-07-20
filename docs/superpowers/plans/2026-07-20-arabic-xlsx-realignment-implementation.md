@@ -281,7 +281,7 @@ assert result[102][0] == 503
 assert result[103][0] == 504
 assert 501 not in {v[0] for v in result.values()}
 
-no_match = align_book([(1, 'سؤال عن الايمان')], [(1, 'موضوع مختلف تماما عن الطبيعة والفلسفة')])
+no_match = align_book([(1, 'ماذا تعني كلمة كاتيشيزم')], [(1, 'جدول الضرب للاعداد من واحد الى عشرة')])
 print('unrelated text, no match:', no_match)
 assert no_match == {}
 
