@@ -16,7 +16,9 @@ Usage:
     python3 align_xlsx.py
 """
 
-from common import BOOK_RANGES
+from collections import Counter, defaultdict
+
+from common import BOOK_RANGES, DATA_DIR, WORK_DIR, book_for_question, load_json, write_json
 from compare_datasets import similarity
 
 FLOOR = 0.35
@@ -72,3 +74,57 @@ def align_book(app_entries, candidates, floor: float = FLOOR) -> dict:
         else:
             j -= 1
     return aligned
+
+
+def main() -> None:
+    current = load_json(DATA_DIR / "catechism_qa_ar.json")
+    xlsx_rows = load_json(WORK_DIR / "catechism_qa_ar_xlsx.json")
+    current_by_number = {row["questionNumber"]: row for row in current}
+    xlsx_rows.sort(key=lambda row: row["questionNumber"])
+    if set(current_by_number) != set(range(1, 1453)):
+        raise SystemExit("Current Arabic dataset must contain each question number 1..1452 exactly once")
+    if {row["questionNumber"] for row in xlsx_rows} != set(range(1, 1453)):
+        raise SystemExit("xlsx dataset must contain each question number 1..1452 exactly once")
+    xlsx_by_number = {row["questionNumber"]: row for row in xlsx_rows}
+
+    all_aligned = {}
+    for book, (start, end) in BOOK_RANGES.items():
+        app_entries = [(n, current_by_number[n]["question"]) for n in range(start, end + 1)]
+        candidates = [(row["questionNumber"], row["question"]) for row in candidate_window(xlsx_rows, book)]
+        aligned = align_book(app_entries, candidates)
+        all_aligned.update(aligned)
+        print(f"Book {book}: {len(aligned)}/{len(app_entries)} questions matched")
+
+    output = []
+    adopted_count = 0
+    by_book = defaultdict(Counter)
+    for number in range(1, 1453):
+        book = book_for_question(number)
+        if number in all_aligned:
+            xlsx_number, _score = all_aligned[number]
+            source = xlsx_by_number[xlsx_number]
+            output.append({"questionNumber": number, "question": source["question"], "answer": source["answer"]})
+            adopted_count += 1
+            by_book[book]["adopted"] += 1
+        else:
+            fallback = current_by_number[number]
+            output.append({"questionNumber": number, "question": fallback["question"], "answer": fallback["answer"]})
+            by_book[book]["fallback"] += 1
+
+    write_json(DATA_DIR / "catechism_qa_ar.json", output)
+
+    lines = [
+        "# Arabic xlsx alignment report", "",
+        f"Adopted: {adopted_count}/1452",
+        f"Kept current (no confident match): {1452 - adopted_count}/1452", "",
+        "| Book | Adopted | Kept current |", "|---:|---:|---:|",
+    ]
+    for book in range(1, 8):
+        counts = by_book[book]
+        lines.append(f"| {book} | {counts['adopted']} | {counts['fallback']} |")
+    (WORK_DIR / "xlsx_alignment_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"Adopted {adopted_count}/1452; wrote backend/data/catechism_qa_ar.json and xlsx_alignment_report.md")
+
+
+if __name__ == "__main__":
+    main()
