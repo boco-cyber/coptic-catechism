@@ -112,6 +112,8 @@ tbody tr:hover { background: var(--warn-bg); }
 .status { color: var(--muted); font-size: 0.9rem; }
 .error { color: var(--error); font-size: 0.9rem; }
 
+[hidden] { display: none !important; }
+
 .edit-panel {
   position: fixed;
   inset: 0;
