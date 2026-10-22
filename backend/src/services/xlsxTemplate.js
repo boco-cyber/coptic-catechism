@@ -1,38 +1,57 @@
 const ExcelJS = require('exceljs');
 
-const COLUMNS = [
-  { header: 'questionNumber', key: 'questionNumber', width: 14 },
-  { header: 'book', key: 'book', width: 8 },
-  { header: 'chapter', key: 'chapter', width: 30 },
-  { header: 'question_en', key: 'question_en', width: 50 },
-  { header: 'answer_en', key: 'answer_en', width: 60 },
-  { header: 'question_ar', key: 'question_ar', width: 50 },
-  { header: 'answer_ar', key: 'answer_ar', width: 60 },
-  { header: 'needsReview', key: 'needsReview', width: 12 }
-];
+const COLUMNS = {
+  en: [
+    { header: 'questionNumber', key: 'questionNumber', width: 14 },
+    { header: 'book', key: 'book', width: 8 },
+    { header: 'chapter', key: 'chapter', width: 30 },
+    { header: 'question', key: 'question', width: 50 },
+    { header: 'answer', key: 'answer', width: 60 }
+  ],
+  ar: [
+    { header: 'questionNumber', key: 'questionNumber', width: 14 },
+    { header: 'book', key: 'book', width: 8 },
+    { header: 'chapter', key: 'chapter', width: 30 },
+    { header: 'question', key: 'question', width: 50 },
+    { header: 'answer', key: 'answer', width: 60 },
+    { header: 'needsReview', key: 'needsReview', width: 12 }
+  ]
+};
 
-async function rowsToWorkbook(rows) {
+function columnsFor(lang) {
+  return COLUMNS[lang === 'ar' ? 'ar' : 'en'];
+}
+
+function normalizeLang(lang) {
+  return lang === 'ar' ? 'ar' : 'en';
+}
+
+async function rowsToWorkbook(rows, lang) {
+  const normalizedLang = normalizeLang(lang);
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Questions');
-  sheet.columns = COLUMNS;
+  sheet.columns = columnsFor(normalizedLang);
   for (const row of rows) {
-    sheet.addRow({
+    const output = {
       questionNumber: row.questionNumber,
       book: row.bookNumber,
       chapter: row.chapterTitle || '',
-      question_en: row.question_en || '',
-      answer_en: row.answer_en || '',
-      question_ar: row.question_ar || '',
-      answer_ar: row.answer_ar || '',
-      needsReview: row.needsReview ? 'TRUE' : 'FALSE'
-    });
+      question: row.question || '',
+      answer: row.answer || ''
+    };
+    if (normalizedLang === 'ar') {
+      output.needsReview = row.needsReview ? 'TRUE' : 'FALSE';
+    }
+    sheet.addRow(output);
   }
-  sheet.getColumn('question_ar').alignment = { horizontal: 'right', wrapText: true };
-  sheet.getColumn('answer_ar').alignment = { horizontal: 'right', wrapText: true };
+  sheet.getColumn('question').alignment = { horizontal: 'right', wrapText: true };
+  sheet.getColumn('answer').alignment = { horizontal: 'right', wrapText: true };
   return workbook.xlsx.writeBuffer();
 }
 
-async function workbookToRows(buffer) {
+async function workbookToRows(buffer, lang) {
+  const normalizedLang = normalizeLang(lang);
+  const columns = columnsFor(normalizedLang);
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(buffer);
   const sheet = workbook.worksheets[0];
@@ -43,8 +62,8 @@ async function workbookToRows(buffer) {
     headerIndex[String(cell.value).trim()] = colNumber;
   });
 
-  const requiredHeaders = COLUMNS.map((c) => c.key);
-  const missing = requiredHeaders.filter((h) => !(h in headerIndex));
+  const requiredHeaders = columns.map((column) => column.key);
+  const missing = requiredHeaders.filter((header) => !(header in headerIndex));
   if (missing.length) {
     throw new Error(`Missing required column(s): ${missing.join(', ')}`);
   }
@@ -59,17 +78,18 @@ async function workbookToRows(buffer) {
     const row = sheet.getRow(rowNumber);
     if (row.cellCount === 0) continue;
     if (get(row, 'questionNumber') === '') continue;
-    rows.push({
+    const parsed = {
       rowNumber,
       questionNumber: get(row, 'questionNumber'),
-      question_en: get(row, 'question_en'),
-      answer_en: get(row, 'answer_en'),
-      question_ar: get(row, 'question_ar'),
-      answer_ar: get(row, 'answer_ar'),
-      needsReview: get(row, 'needsReview')
-    });
+      question: get(row, 'question'),
+      answer: get(row, 'answer')
+    };
+    if (normalizedLang === 'ar') {
+      parsed.needsReview = get(row, 'needsReview');
+    }
+    rows.push(parsed);
   }
   return rows;
 }
 
-module.exports = { COLUMNS, rowsToWorkbook, workbookToRows };
+module.exports = { COLUMNS, columnsFor, rowsToWorkbook, workbookToRows };

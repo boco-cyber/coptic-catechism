@@ -1,0 +1,1092 @@
+{
+  "source": "Youth-Catechism-QA/all_data.json",
+  "books": [
+    {
+      "bookNumber": 1,
+      "sourceBookId": 1,
+      "title": "الجزء الأول: مقدمات في الكاتيكزم القبطي",
+      "slug": "الجزء-الأول-مقدمات-في-الكاتيكزم-القبطي",
+      "questionRange": {
+        "start": 1,
+        "end": 100
+      },
+      "totalQuestions": 100,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 15,
+          "title": "١) أ- الكاتيكيزم",
+          "slug": "-أ-الكاتيكيزم",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1,
+            "end": 2
+          },
+          "totalQuestions": 2
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 16,
+          "title": "١) ب- الكاتيكيزم القبطي عبر العصور",
+          "slug": "-ب-الكاتيكيزم-القبطي-عبر-العصور",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 3,
+            "end": 12
+          },
+          "totalQuestions": 10
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 18,
+          "title": "٢) المبادئ الأساسية للكاتيكيزم",
+          "slug": "-المبادئ-الأساسية-للكاتيكيزم",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 13,
+            "end": 14
+          },
+          "totalQuestions": 2
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 17,
+          "title": "٣) الإيمان العامل بالمحبة",
+          "slug": "-الإيمان-العامل-بالمحبة-1",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 15,
+            "end": 46
+          },
+          "totalQuestions": 32
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": 19,
+          "title": "٤) الكتاب المقدس",
+          "slug": "-الكتاب-المقدس",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 47,
+            "end": 68
+          },
+          "totalQuestions": 22
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": 20,
+          "title": "٥) التقليد المقدس",
+          "slug": "-التقليد-المقدس",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 69,
+            "end": 100
+          },
+          "totalQuestions": 32
+        }
+      ]
+    },
+    {
+      "bookNumber": 2,
+      "sourceBookId": 2,
+      "title": "الجزء الثاني: العقائد المسيحية",
+      "slug": "الجزء-الثاني-العقائد-المسيحية",
+      "questionRange": {
+        "start": 101,
+        "end": 452
+      },
+      "totalQuestions": 352,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 1,
+          "title": "١) العقائد المسيحية",
+          "slug": "-العقائد-المسيحية",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 101,
+            "end": 103
+          },
+          "totalQuestions": 3
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 2,
+          "title": "٢) أ- قانون الإيمان وبدء القوانين الكنسية",
+          "slug": "-أ-قانون-الإيمان-وبدء-القوانين-الكنسية",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 104,
+            "end": 106
+          },
+          "totalQuestions": 3
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 3,
+          "title": "٢) ب- حول قانون الإيمان القبطي الأرثوذكسي",
+          "slug": "-ب-حول-قانون-الإيمان-القبطي-الأرثوذكسي",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 107,
+            "end": 111
+          },
+          "totalQuestions": 5
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 4,
+          "title": "٢) ج- تفسير قانون الإيمان",
+          "slug": " ج-تفسير-قانون-الإيمان",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 112,
+            "end": 152
+          },
+          "totalQuestions": 41
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": 5,
+          "title": "٣) الإيمان بالله ومعرفتنا له",
+          "slug": "-الإيمان-بالله-ومعرفتنا-له",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 153,
+            "end": 183
+          },
+          "totalQuestions": 31
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": 6,
+          "title": "٤) الثالوث القدوس",
+          "slug": "-الثالوث-القدوس",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 184,
+            "end": 214
+          },
+          "totalQuestions": 31
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": 7,
+          "title": "٥) الخالق العجيب حافظ المسكونة",
+          "slug": "-الخالق-العجيب-حافظ-المسكونة",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 215,
+            "end": 240
+          },
+          "totalQuestions": 26
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": 8,
+          "title": "٦) سمو الإنسان عند خلقته",
+          "slug": "-سمو-الإنسان-عند-خلقته",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 241,
+            "end": 269
+          },
+          "totalQuestions": 29
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": 9,
+          "title": "٧) العناية الإلهية",
+          "slug": "-العناية-الإلهية",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 270,
+            "end": 296
+          },
+          "totalQuestions": 27
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": 10,
+          "title": "٨) النعمة الإلهية",
+          "slug": "-النعمة-الإلهية",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 297,
+            "end": 311
+          },
+          "totalQuestions": 15
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": 11,
+          "title": "٩) سقوط الإنسان",
+          "slug": "-سقوط-الإنسان",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 312,
+            "end": 341
+          },
+          "totalQuestions": 30
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": 12,
+          "title": "١٠) ربنا يسوع مخلص العالم",
+          "slug": "-ربنا-يسوع-مخلص-العالم",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 342,
+            "end": 373
+          },
+          "totalQuestions": 32
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": 13,
+          "title": "١١) ألقاب المخلص وأسماؤه تشهد لأعمال حبه",
+          "slug": "-ألقاب-المخلص-وأسماؤه-تشهد-لأعمال-حبه",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 374,
+            "end": 412
+          },
+          "totalQuestions": 39
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": 14,
+          "title": "١٢) الروح القدس والخلاص الإلهي",
+          "slug": "-الروح-القدس-والخلاص-الإلهي",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 413,
+            "end": 452
+          },
+          "totalQuestions": 40
+        }
+      ]
+    },
+    {
+      "bookNumber": 3,
+      "sourceBookId": 3,
+      "title": "الجزء الثالث: الكنيسة ملكوت الله على الأرض",
+      "slug": "الجزء-الثالث-الكنيسة-ملكوت-الله-على-الأرض",
+      "questionRange": {
+        "start": 453,
+        "end": 852
+      },
+      "totalQuestions": 400,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 21,
+          "title": "١) الكنيسة ملكوت الله على الأرض",
+          "slug": "-الكنيسة-ملكوت-الله-على-الأرض",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 453,
+            "end": 487
+          },
+          "totalQuestions": 35
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 22,
+          "title": "٢) رئيس الكهنة السماوي والكنيسة",
+          "slug": "-رئيس-الكهنة-السماوي-والكنيسة",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 488,
+            "end": 496
+          },
+          "totalQuestions": 9
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 23,
+          "title": "٣) الكنيسة عُرس سماوي لا ينقطع",
+          "slug": "-الكنيسة-عرس-سماوي-لا-ينقطع",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 497,
+            "end": 512
+          },
+          "totalQuestions": 16
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 24,
+          "title": "٤) أعمال الكنيسة الفريدة",
+          "slug": "-أعمال-الكنيسة-الفريدة",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 513,
+            "end": 523
+          },
+          "totalQuestions": 11
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": 25,
+          "title": "٥) الكنيسة بيت الخلاص",
+          "slug": "-الكنيسة-بيت-الخلاص",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 524,
+            "end": 537
+          },
+          "totalQuestions": 14
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": 26,
+          "title": "٦) يا لسمو الكنيسة",
+          "slug": "-يا-لسمو-الكنيسة",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 538,
+            "end": 553
+          },
+          "totalQuestions": 16
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": 27,
+          "title": "٧) الكنيسة والتجديد المستمر",
+          "slug": "-الكنيسة-والتجديد-المستمر",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 554,
+            "end": 556
+          },
+          "totalQuestions": 3
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": 28,
+          "title": "٨) الكنيسة والخط الاجتماعي",
+          "slug": "-الكنيسة-والخط-الاجتماعي",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 557,
+            "end": 579
+          },
+          "totalQuestions": 23
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": 29,
+          "title": "٩) الإنسان الكنسي",
+          "slug": "-الإنسان-الكنسي",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 580,
+            "end": 587
+          },
+          "totalQuestions": 8
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": 30,
+          "title": "١٠) سر بيت الله",
+          "slug": "-سر-بيت-الله",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 588,
+            "end": 611
+          },
+          "totalQuestions": 24
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": 31,
+          "title": "١١) حامل الأيقونات \"الأيقونستاسز\"",
+          "slug": "-حامل-الأيقونات-الأيقونستاسز",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 612,
+            "end": 634
+          },
+          "totalQuestions": 23
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": 32,
+          "title": "١٢) الفن القبطي والرموز",
+          "slug": "-الفن-القبطي-والرموز",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 635,
+            "end": 642
+          },
+          "totalQuestions": 8
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": 33,
+          "title": "١٣) الأواني المقدسة",
+          "slug": "-الأواني-المقدسة",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 643,
+            "end": 656
+          },
+          "totalQuestions": 14
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": 34,
+          "title": "١٤) صحن الكنيسة",
+          "slug": "-صحن-الكنيسة",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 657,
+            "end": 667
+          },
+          "totalQuestions": 11
+        },
+        {
+          "chapterNumber": 15,
+          "sourceSectionId": 35,
+          "title": "١٥) المنارة \"برج الكنيسة\"",
+          "slug": "-المنارة-برج-الكنيسة",
+          "sortOrder": 15,
+          "questionRange": {
+            "start": 668,
+            "end": 672
+          },
+          "totalQuestions": 5
+        },
+        {
+          "chapterNumber": 16,
+          "sourceSectionId": 36,
+          "title": "١٦) الأسرار المقدسة (سر المعمودية، حول طقس العماد، طقوس ومراسيم العماد المقدس)",
+          "slug": "-الأسرار-المقدسة-سر-المعمودية-حول-طقس-العماد-طقوس-ومراسيم-العماد-المقدس",
+          "sortOrder": 16,
+          "questionRange": {
+            "start": 673,
+            "end": 703
+          },
+          "totalQuestions": 31
+        },
+        {
+          "chapterNumber": 17,
+          "sourceSectionId": 37,
+          "title": "١٧) سر المسحة",
+          "slug": "-سر-المسحة",
+          "sortOrder": 17,
+          "questionRange": {
+            "start": 704,
+            "end": 715
+          },
+          "totalQuestions": 12
+        },
+        {
+          "chapterNumber": 18,
+          "sourceSectionId": 38,
+          "title": "١٨) سر التوبة والاعتراف",
+          "slug": "-سر-التوبة-والاعتراف",
+          "sortOrder": 18,
+          "questionRange": {
+            "start": 716,
+            "end": 738
+          },
+          "totalQuestions": 23
+        },
+        {
+          "chapterNumber": 19,
+          "sourceSectionId": 39,
+          "title": "١٩) سر الإفخارستيا (حول الخطوط الرئيسية لليتورجيا القبطية)",
+          "slug": "-سر-الإفخارستيا-حول-الخطوط-الرئيسية-لليتورجيا-القبطية",
+          "sortOrder": 19,
+          "questionRange": {
+            "start": 739,
+            "end": 782
+          },
+          "totalQuestions": 44
+        },
+        {
+          "chapterNumber": 20,
+          "sourceSectionId": 40,
+          "title": "٢٠) سر الكهنوت",
+          "slug": "-سر-الكهنوت",
+          "sortOrder": 20,
+          "questionRange": {
+            "start": 783,
+            "end": 816
+          },
+          "totalQuestions": 34
+        },
+        {
+          "chapterNumber": 21,
+          "sourceSectionId": 41,
+          "title": "٢١) سر الزواج",
+          "slug": "-سر-الزواج",
+          "sortOrder": 21,
+          "questionRange": {
+            "start": 817,
+            "end": 841
+          },
+          "totalQuestions": 25
+        },
+        {
+          "chapterNumber": 22,
+          "sourceSectionId": 42,
+          "title": "٢٢) سر مسحة المرضى",
+          "slug": "-سر-مسحة-المرضى",
+          "sortOrder": 22,
+          "questionRange": {
+            "start": 842,
+            "end": 844
+          },
+          "totalQuestions": 3
+        },
+        {
+          "chapterNumber": 23,
+          "sourceSectionId": 43,
+          "title": "٢٣) الكنيسة القبطية والحركة الرهبانية",
+          "slug": "-الكنيسة-القبطية-والحركة-الرهبانية",
+          "sortOrder": 23,
+          "questionRange": {
+            "start": 845,
+            "end": 852
+          },
+          "totalQuestions": 8
+        }
+      ]
+    },
+    {
+      "bookNumber": 4,
+      "sourceBookId": 4,
+      "title": "الجزء الرابع: العبادة الكنسية",
+      "slug": "الجزء-الرابع-العبادة-الكنسية",
+      "questionRange": {
+        "start": 853,
+        "end": 1084
+      },
+      "totalQuestions": 232,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 44,
+          "title": "١) العبادة الكنسية",
+          "slug": "-العبادة-الكنسية",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 853,
+            "end": 870
+          },
+          "totalQuestions": 18
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 45,
+          "title": "٢) حياة الصلاة",
+          "slug": "-حياة-الصلاة",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 871,
+            "end": 894
+          },
+          "totalQuestions": 24
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 46,
+          "title": "٣) صلوات السواعي (الإجبية)",
+          "slug": "-صلوات-السواعي-الإجبية",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 895,
+            "end": 905
+          },
+          "totalQuestions": 11
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 47,
+          "title": "٤) الصلاة النموذجية",
+          "slug": "-الصلاة-النموذجية",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 906,
+            "end": 919
+          },
+          "totalQuestions": 14
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": 48,
+          "title": "٥) الصلاة العقلية والتأمل",
+          "slug": "-الصلاة-العقلية-والتأمل",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 920,
+            "end": 934
+          },
+          "totalQuestions": 15
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": 49,
+          "title": "٦) صلاة يسوع أو الصلاة السهمية",
+          "slug": "-صلاة-يسوع-أو-الصلاة-السهمية",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 935,
+            "end": 953
+          },
+          "totalQuestions": 19
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": 50,
+          "title": "٧) الميطانيات والسجود",
+          "slug": "-الميطانيات-والسجود",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 954,
+            "end": 961
+          },
+          "totalQuestions": 8
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": 51,
+          "title": "٨) العبادة المقدسة وحياة الملء",
+          "slug": "-العبادة-المقدسة-وحياة-الملء",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 962,
+            "end": 972
+          },
+          "totalQuestions": 11
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": 52,
+          "title": "٩) العبادة ومخافة الرب",
+          "slug": "-العبادة-ومخافة-الرب",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 973,
+            "end": 989
+          },
+          "totalQuestions": 17
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": 53,
+          "title": "١٠) الصوم المقدس",
+          "slug": "-الصوم-المقدس",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 990,
+            "end": 1007
+          },
+          "totalQuestions": 18
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": 54,
+          "title": "١١) العبادة الكنسية والإماتة",
+          "slug": "-العبادة-الكنسية-والإماتة",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 1008,
+            "end": 1016
+          },
+          "totalQuestions": 9
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": 55,
+          "title": "١٢) العبادة الكنسية والدموع",
+          "slug": "-العبادة-الكنسية-والدموع",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 1017,
+            "end": 1028
+          },
+          "totalQuestions": 12
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": 56,
+          "title": "١٣) التسبيح والفكر السماوي",
+          "slug": "-التسبيح-والفكر-السماوي",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 1029,
+            "end": 1040
+          },
+          "totalQuestions": 12
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": 57,
+          "title": "١٤) الألحان والفكر السماوي",
+          "slug": "-الألحان-والفكر-السماوي",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 1041,
+            "end": 1047
+          },
+          "totalQuestions": 7
+        },
+        {
+          "chapterNumber": 15,
+          "sourceSectionId": 58,
+          "title": "١٥) التقويم الكنسي القبطي والحياة اليومية المتهللة في الرب",
+          "slug": "-التقويم-الكنسي-القبطي-والحياة-اليومية-المتهللة-في-الرب",
+          "sortOrder": 15,
+          "questionRange": {
+            "start": 1048,
+            "end": 1084
+          },
+          "totalQuestions": 37
+        }
+      ]
+    },
+    {
+      "bookNumber": 5,
+      "sourceBookId": 5,
+      "title": "الجزء الخامس: خلقة العالم الروحي",
+      "slug": "الجزء-الخامس-خلقة-العالم-الروحي",
+      "questionRange": {
+        "start": 1085,
+        "end": 1156
+      },
+      "totalQuestions": 72,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 59,
+          "title": "١) خلقة العالم الروحي",
+          "slug": "-خلقة-العالم-الروحي",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1085,
+            "end": 1097
+          },
+          "totalQuestions": 13
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 60,
+          "title": "٢) صُحبتنا مع الطغمات السمائية",
+          "slug": "-صحبتنا-مع-الطغمات-السمائية",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 1098,
+            "end": 1109
+          },
+          "totalQuestions": 12
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 61,
+          "title": "٣) نظام الطغمات السمائية",
+          "slug": "-نظام-الطغمات-السمائية",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 1110,
+            "end": 1139
+          },
+          "totalQuestions": 30
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 62,
+          "title": "٤) ليس للشيطان سلطان علينا؟",
+          "slug": "-ليس-للشيطان-سلطان-علينا",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 1140,
+            "end": 1156
+          },
+          "totalQuestions": 17
+        }
+      ]
+    },
+    {
+      "bookNumber": 6,
+      "sourceBookId": 6,
+      "title": "الجزء السادس: المفاهيم المسيحية والحياة اليومية",
+      "slug": "الجزء-السادس-المفاهيم-المسيحية-والحياة-اليومية",
+      "questionRange": {
+        "start": 1157,
+        "end": 1328
+      },
+      "totalQuestions": 172,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 63,
+          "title": "١) الفضائل المسيحية",
+          "slug": "-الفضائل-المسيحية",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1157,
+            "end": 1159
+          },
+          "totalQuestions": 3
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 64,
+          "title": "٢) فضيلة التمييز والاستنارة",
+          "slug": "-فضيلة-التمييز-والاستنارة",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 1160,
+            "end": 1170
+          },
+          "totalQuestions": 11
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 65,
+          "title": "٣) فضيلة الطاعة",
+          "slug": "-فضيلة-الطاعة",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 1171,
+            "end": 1194
+          },
+          "totalQuestions": 24
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 66,
+          "title": "٤) فضيلة العفة والطهارة",
+          "slug": "-فضيلة-العفة-والطهارة",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 1195,
+            "end": 1214
+          },
+          "totalQuestions": 20
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": 67,
+          "title": "٥) الرذائل أو الشرور",
+          "slug": "-الرذائل-أو-الشرور",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 1215,
+            "end": 1226
+          },
+          "totalQuestions": 12
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": 68,
+          "title": "٦) الإيمان المسيحي والثقافات البشرية",
+          "slug": "-الإيمان-المسيحي-والثقافات-البشرية",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 1227,
+            "end": 1237
+          },
+          "totalQuestions": 11
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": 69,
+          "title": "٧) العلاقة بين الكنيسة والدولة",
+          "slug": "-العلاقة-بين-الكنيسة-والدولة",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 1238,
+            "end": 1246
+          },
+          "totalQuestions": 9
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": 70,
+          "title": "٨) الإيمان المسيحي والخدمة العسكرية",
+          "slug": "-الإيمان-المسيحي-والخدمة-العسكرية",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 1247,
+            "end": 1267
+          },
+          "totalQuestions": 21
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": 71,
+          "title": "٩) الإيمان المسيحي والعلاقات الاجتماعية والأسرية",
+          "slug": "-الإيمان-المسيحي-والعلاقات-الاجتماعية-والأسرية",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 1268,
+            "end": 1277
+          },
+          "totalQuestions": 10
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": 72,
+          "title": "١٠) التضامن الاجتماعي",
+          "slug": "-التضامن-الاجتماعي",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 1278,
+            "end": 1281
+          },
+          "totalQuestions": 4
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": 73,
+          "title": "١١) الإيمان المسيحي والطبقات الاجتماعية",
+          "slug": "-الإيمان-المسيحي-والطبقات-الاجتماعية",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 1282,
+            "end": 1290
+          },
+          "totalQuestions": 9
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": 74,
+          "title": "١٢) الإيمان المسيحي والحرية",
+          "slug": "-الإيمان-المسيحي-والحرية",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 1291,
+            "end": 1303
+          },
+          "totalQuestions": 13
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": 75,
+          "title": "١٣) الثروة والأغنياء في الإيمان المسيحي",
+          "slug": "-الثروة-والأغنياء-في-الإيمان-المسيحي",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 1304,
+            "end": 1319
+          },
+          "totalQuestions": 16
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": 76,
+          "title": "١٤) العلم والإيمان",
+          "slug": "-العلم-والإيمان",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 1320,
+            "end": 1328
+          },
+          "totalQuestions": 9
+        }
+      ]
+    },
+    {
+      "bookNumber": 7,
+      "sourceBookId": 7,
+      "title": "الجزء السابع: الأخرويات والحياة بعد الموت",
+      "slug": "الجزء-السابع-الأخرويات-والحياة-بعد-الموت",
+      "questionRange": {
+        "start": 1329,
+        "end": 1424
+      },
+      "totalQuestions": 96,
+      "sections": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": 77,
+          "title": "١) عطية الموت والحياة المُقامة في المسيح",
+          "slug": "-عطية-الموت-والحياة-المقامة-في-المسيح",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1329,
+            "end": 1341
+          },
+          "totalQuestions": 13
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": 78,
+          "title": "٢) آلام الفراق المقدسة",
+          "slug": "-آلام-الفراق-المقدسة",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 1342,
+            "end": 1343
+          },
+          "totalQuestions": 2
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": 79,
+          "title": "٣) المُلك الألفي",
+          "slug": "-الملك-الألفي",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 1344,
+            "end": 1351
+          },
+          "totalQuestions": 8
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": 80,
+          "title": "٤) المجيئان والاختطاف",
+          "slug": "-المجيئان-والاختطاف",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 1352,
+            "end": 1380
+          },
+          "totalQuestions": 29
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": 81,
+          "title": "٥) الدينونة العامة",
+          "slug": "-الدينونة-العامة",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 1381,
+            "end": 1387
+          },
+          "totalQuestions": 7
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": 82,
+          "title": "٦) الجسد المُقام",
+          "slug": "-الجسد-المقام",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 1388,
+            "end": 1406
+          },
+          "totalQuestions": 19
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": 83,
+          "title": "٧) السماء وأورشليم العليا",
+          "slug": "-السماء-وأورشليم-العليا",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 1407,
+            "end": 1424
+          },
+          "totalQuestions": 18
+        }
+      ]
+    }
+  ]
+}

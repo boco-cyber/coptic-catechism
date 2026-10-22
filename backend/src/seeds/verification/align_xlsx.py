@@ -21,11 +21,15 @@ baseline.
 """
 
 import os
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
 from common import BOOK_RANGES, DATA_DIR, WORK_DIR, book_for_question, load_json, write_json
 from compare_datasets import similarity
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from formatting import format_arabic_dataset
 
 # Real-data review found semantic off-by-one matches as high as 0.654.  The
 # distribution is strongly bimodal (almost all good matches score >= 0.85),
@@ -123,6 +127,7 @@ def main() -> None:
             output.append({"questionNumber": number, "question": fallback["question"], "answer": fallback["answer"]})
             by_book[book]["fallback"] += 1
 
+    output = format_arabic_dataset(output)
     write_json(DATA_DIR / "catechism_qa_ar.json", output)
 
     lines = [

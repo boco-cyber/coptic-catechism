@@ -1,4 +1,5 @@
 const BASE = '/admin/api';
+export const LANG = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
 
 async function request(path, { method = 'GET', body, isForm = false, redirectOnUnauthorized = true } = {}) {
   const headers = {};
@@ -38,19 +39,19 @@ export const api = {
     redirectOnUnauthorized: false
   }),
   logout: () => request('/logout', { method: 'POST' }),
-  listQuestions: (params) => request(`/questions?${new URLSearchParams(params)}`),
-  getQuestion: (questionNumber) => request(`/questions/${questionNumber}`),
-  updateQuestion: (questionNumber, fields) => request(`/questions/${questionNumber}`, { method: 'PUT', body: fields }),
-  stats: () => request('/stats'),
-  exportUrl: (params) => `${BASE}/export?${new URLSearchParams(params)}`,
+  listQuestions: (params) => request(`/questions?${new URLSearchParams({ ...params, lang: LANG })}`),
+  getQuestion: (questionNumber) => request(`/questions/${questionNumber}?lang=${LANG}`),
+  updateQuestion: (questionNumber, fields) => request(`/questions/${questionNumber}?lang=${LANG}`, { method: 'PUT', body: fields }),
+  stats: () => request(`/stats?lang=${LANG}`),
+  exportUrl: (params) => `${BASE}/export?${new URLSearchParams({ ...params, lang: LANG })}`,
   importDryRun: (file) => {
     const form = new FormData();
     form.append('file', file);
-    return request('/import?dryRun=true', { method: 'POST', body: form, isForm: true });
+    return request(`/import?dryRun=true&lang=${LANG}`, { method: 'POST', body: form, isForm: true });
   },
   importCommit: (file) => {
     const form = new FormData();
     form.append('file', file);
-    return request('/import?dryRun=false', { method: 'POST', body: form, isForm: true });
+    return request(`/import?dryRun=false&lang=${LANG}`, { method: 'POST', body: form, isForm: true });
   }
 };

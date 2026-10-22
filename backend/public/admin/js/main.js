@@ -1,4 +1,4 @@
-import { api } from './api.js';
+import { api, LANG } from './api.js';
 import { initBrowse } from './browse.js';
 import { initEdit } from './edit.js';
 import { initImportExport } from './importExport.js';
@@ -22,10 +22,19 @@ logoutButton.addEventListener('click', async () => {
 
 async function refreshStats() {
   const { data } = await api.stats();
-  statsBox.textContent = `${data.needsReview} of ${data.total} need review`;
+  statsBox.textContent = LANG === 'ar'
+    ? `${data.needsReview} of ${data.total} need review`
+    : `${data.total} English questions`;
 }
 
 async function init() {
+  document.querySelectorAll('[data-admin-lang]').forEach((link) => {
+    link.classList.toggle('active', link.dataset.adminLang === LANG);
+  });
+  document.querySelectorAll('[data-lang-only]').forEach((node) => {
+    if (node.dataset.langOnly !== LANG) node.hidden = true;
+  });
+  document.querySelector('#editForm').dir = LANG === 'ar' ? 'rtl' : 'ltr';
   try {
     await api.me();
   } catch {

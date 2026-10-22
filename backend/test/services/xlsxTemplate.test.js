@@ -1,35 +1,51 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const ExcelJS = require('exceljs');
 const { rowsToWorkbook, workbookToRows } = require('../../src/services/xlsxTemplate');
 
-test('rowsToWorkbook + workbookToRows round-trips question data', async () => {
-  const rows = [
+test('English workbook has question/answer but no needsReview column', async () => {
+  const buffer = await rowsToWorkbook([
+    {
+      questionNumber: 1,
+      bookNumber: 1,
+      chapterTitle: 'Introduction',
+      question: 'What is a catechism?',
+      answer: 'A summary of the faith.',
+      needsReview: true
+    }
+  ], 'en');
+
+  const parsed = await workbookToRows(buffer, 'en');
+  assert.equal(parsed.length, 1);
+  assert.equal(parsed[0].questionNumber, '1');
+  assert.equal(parsed[0].question, 'What is a catechism?');
+  assert.equal('needsReview' in parsed[0], false);
+});
+
+test('Arabic workbook round-trips needsReview', async () => {
+  const buffer = await rowsToWorkbook([
     {
       questionNumber: 1,
       bookNumber: 1,
       chapterTitle: 'مقدمة',
-      question_en: 'What is a catechism?',
-      answer_en: 'A summary of the faith.',
-      question_ar: 'ما هو الكاتيكيزم؟',
-      answer_ar: 'ملخص للإيمان.',
+      question: 'ما هو الكاتيكيزم؟',
+      answer: 'ملخص للإيمان.',
       needsReview: true
     }
-  ];
-  const buffer = await rowsToWorkbook(rows);
-  const parsed = await workbookToRows(buffer);
+  ], 'ar');
+
+  const parsed = await workbookToRows(buffer, 'ar');
   assert.equal(parsed.length, 1);
-  assert.equal(parsed[0].questionNumber, '1');
-  assert.equal(parsed[0].question_ar, 'ما هو الكاتيكيزم؟');
+  assert.equal(parsed[0].question, 'ما هو الكاتيكيزم؟');
   assert.equal(parsed[0].needsReview, 'TRUE');
 });
 
 test('workbookToRows throws when a required column is missing', async () => {
-  const ExcelJS = require('exceljs');
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet('Questions');
   sheet.columns = [{ header: 'questionNumber', key: 'questionNumber' }];
   sheet.addRow({ questionNumber: 1 });
   const badBuffer = await workbook.xlsx.writeBuffer();
-  const { workbookToRows: parse } = require('../../src/services/xlsxTemplate');
-  await assert.rejects(() => parse(badBuffer), /Missing required column/);
+
+  await assert.rejects(() => workbookToRows(badBuffer, 'ar'), /Missing required column/);
 });

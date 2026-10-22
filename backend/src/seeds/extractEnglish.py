@@ -2,10 +2,14 @@
 """Extract English Q&A from catechism PDF volumes with proper boundary detection."""
 
 import fitz, json, re, sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from formatting import format_english_dataset
 
 VOL1 = "/home/gergo/OneDrive/Documents/catechumens class material/Catechism-of-the-Coptic-Orthodox-Church-Volume-1-Fr.Tadros-Y.-Malaty.pdf"
 VOL2 = "/home/gergo/OneDrive/Documents/catechumens class material/Catechism-of-the-Coptic-Orthodox-Church-Volume-2-Fr.Tadros-Y.-Malaty.pdf"
-OUT = "/home/gergo/Seagate2/apps/coptic-catechism/backend/data/catechism_qa.json"
+OUT = str(Path(__file__).resolve().parents[2] / "data" / "catechism_qa.json")
 
 end_markers = ['\nBibliography', '\nBIBLIOGRAPHY', '\nIndex', '\nINDEX',
                '\nList of Abbreviations', '\nLIST OF ABBREVIATIONS']
@@ -139,6 +143,7 @@ if missing:
     print(f"Missing: {len(missing)} questions: {missing}", file=sys.stderr)
 
 output = [results[i] for i in sorted(results.keys())]
+output = format_english_dataset(output)
 
 with open(OUT, 'w', encoding='utf-8') as f:
     json.dump(output, f, ensure_ascii=False, indent=2)

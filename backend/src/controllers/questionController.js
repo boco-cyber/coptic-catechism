@@ -1,68 +1,8 @@
-const { Question, QuestionAr, Book, Chapter } = require('../models');
+const { Question, QuestionAr, Book, Chapter, BookAr, ChapterAr } = require('../models');
+const { catalogueFor, MAX_QUESTION_NUMBER } = require('../services/catalogue');
 
-function getModel(lang) {
-  return lang === 'ar' ? QuestionAr : Question;
-}
-
-const ARABIC_BOOK_TITLES = {
-  1: 'مقدمة في الكاتيكيزم القبطي',
-  2: 'العقائد المسيحية',
-  3: 'الكنيسة: ملكوت الله',
-  4: 'العبادة الكنسية رحلة إلى السماء',
-  5: 'المؤمن والطغمات السمائية',
-  6: 'المفاهيم المسيحية والحياة اليومية',
-  7: 'الأخرويات والحياة بعد الموت'
-};
-
-function arabicNumber(value) {
-  return Number(String(value).replace(/[٠-٩]/g, digit => '٠١٢٣٤٥٦٧٨٩'.indexOf(digit)));
-}
-
-function cleanArabicQuestion(text, questionNumber) {
-  let output = String(text || '').trim();
-  const leading = output.match(/^[\s؛;.,:،]*(\d+|[٠-٩]+)\s*/);
-  if (leading && arabicNumber(leading[1]) === Number(questionNumber)) {
-    output = output.slice(leading[0].length);
-  }
-  output = output.replace(/^[\s؛;.,:،]+/, '');
-  output = output.replace(/\s*\(?[0-9٠-٩]+(?:\/[0-9٠-٩]+)+\)?\s*([؟?])$/, '$1');
-  return output.trim();
-}
-
-function localizeArabicRelations(item) {
-  if (item?.book) {
-    item.book.title = item.book.titleAr || ARABIC_BOOK_TITLES[item.book.bookNumber] || item.book.title;
-  }
-  if (item?.chapter?.titleAr) item.chapter.title = item.chapter.titleAr;
-}
-
-async function addArabicFallback(items) {
-  const rows = Array.isArray(items) ? items : [items];
-  const numbers = rows.filter(Boolean).map((item) => item.questionNumber);
-  if (!numbers.length) return items;
-
-  const englishRows = await Question.find({ questionNumber: { $in: numbers } })
-    .select('questionNumber question answer')
-    .lean();
-  const english = new Map(englishRows.map((item) => [item.questionNumber, item]));
-
-  for (const item of rows) {
-    if (!item) continue;
-    item.question = cleanArabicQuestion(item.question, item.questionNumber);
-    localizeArabicRelations(item);
-    const fallback = english.get(item.questionNumber);
-    if (!fallback) continue;
-    if (!item.question) item.question = fallback.question;
-    if (!item.answer) {
-      item.answer = fallback.answer;
-      item.answerLanguage = 'en';
-      item.langFallback = true;
-    } else {
-      item.answerLanguage = 'ar';
-      item.langFallback = false;
-    }
-  }
-  return items;
+function language(req) {
+  return req.query.lang === 'ar' ? 'ar' : 'en';
 }
 
 function escapedRegex(value) {
@@ -72,42 +12,18 @@ function escapedRegex(value) {
 // GET /api/questions/:questionNumber - Get single question
 exports.getQuestion = async (req, res) => {
   try {
-    const { questionNumber } = req.params;
-    const lang = req.query.lang;
-    const Model = getModel(lang);
-    let usedEnglishFallback = false;
+    const lang = language(req);
+    const { Question: Model, maxQuestionNumber } = catalogueFor(lang);
+    const questionNumber = parseInt(req.params.questionNumber);
 
-    let question = await Model.findOne({
-      questionNumber: parseInt(questionNumber)
-    })
-      .populate('book', 'bookNumber title titleAr')
-      .populate('chapter', 'chapterNumber title titleAr')
+    const question = await Model.findOne({ questionNumber })
+      .populate('book', 'bookNumber title')
+      .populate('chapter', 'chapterNumber title')
       .lean();
-
-    if (!question && lang === 'ar') {
-      question = await Question.findOne({ questionNumber: parseInt(questionNumber) })
-        .populate('book', 'bookNumber title titleAr')
-        .populate('chapter', 'chapterNumber title titleAr')
-        .lean();
-      if (question) {
-        usedEnglishFallback = true;
-        question.langFallback = true;
-        question.questionLanguage = 'en';
-        question.answerLanguage = 'en';
-      }
-    }
 
     if (!question) {
       return res.status(404).json({ success: false, error: 'Question not found' });
     }
-
-    // Swap titles in populated docs
-    if (lang === 'ar') {
-      localizeArabicRelations(question);
-      if (!usedEnglishFallback) await addArabicFallback(question);
-    }
-    delete question.book?.titleAr;
-    delete question.chapter?.titleAr;
 
     const prev = await Model.findOne({
       questionNumber: { $lt: question.questionNumber }
@@ -119,7 +35,7 @@ exports.getQuestion = async (req, res) => {
 
     res.json({
       success: true,
-      data: { ...question, prev, next }
+      data: { ...question, prev, next, maxQuestionNumber }
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -129,46 +45,30 @@ exports.getQuestion = async (req, res) => {
 // GET /api/questions/range/:start/:end - Get questions in a range
 exports.getQuestionRange = async (req, res) => {
   try {
-    const { start, end } = req.params;
-    const lang = req.query.lang;
-    const Model = getModel(lang);
+    const lang = language(req);
+    const { Question: Model, maxQuestionNumber } = catalogueFor(lang);
 
-    let questions = await Model.find({
-      questionNumber: {
-        $gte: parseInt(start),
-        $lte: parseInt(end)
-      }
-    })
-      .sort({ questionNumber: 1 })
-      .populate('book', 'bookNumber title titleAr')
-      .populate('chapter', 'chapterNumber title titleAr')
-      .lean();
-
-    if (lang === 'ar') {
-      for (const q of questions) {
-        localizeArabicRelations(q);
-        delete q.book?.titleAr;
-        delete q.chapter?.titleAr;
-      }
-      await addArabicFallback(questions);
-
-      const englishRows = await Question.find({
-        questionNumber: { $gte: parseInt(start), $lte: parseInt(end) }
+    const [questions, total] = await Promise.all([
+      Model.find({
+        questionNumber: {
+          $gte: parseInt(req.params.start),
+          $lte: parseInt(req.params.end)
+        }
       })
         .sort({ questionNumber: 1 })
-        .populate('book', 'bookNumber title titleAr')
-        .populate('chapter', 'chapterNumber title titleAr')
-        .lean();
-      const arabicByNumber = new Map(questions.map((item) => [item.questionNumber, item]));
-      questions = englishRows.map((english) => arabicByNumber.get(english.questionNumber) || {
-        ...english,
-        langFallback: true,
-        questionLanguage: 'en',
-        answerLanguage: 'en'
-      });
-    }
+        .populate('book', 'bookNumber title')
+        .populate('chapter', 'chapterNumber title')
+        .lean(),
+      Model.countDocuments()
+    ]);
 
-    res.json({ success: true, count: questions.length, data: questions });
+    res.json({
+      success: true,
+      count: questions.length,
+      total,
+      maxQuestionNumber,
+      data: questions
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -178,8 +78,8 @@ exports.getQuestionRange = async (req, res) => {
 exports.searchQuestions = async (req, res) => {
   try {
     const { q, book, page = 1, limit = 20 } = req.query;
-    const lang = req.query.lang;
-    const Model = getModel(lang);
+    const lang = language(req);
+    const { Question: Model, maxQuestionNumber } = catalogueFor(lang);
 
     if (!q || q.trim().length < 2) {
       return res.status(400).json({
@@ -208,20 +108,11 @@ exports.searchQuestions = async (req, res) => {
         .sort(sort)
         .skip(skip)
         .limit(parseInt(limit))
-        .populate('book', 'bookNumber title titleAr')
-        .populate('chapter', 'chapterNumber title titleAr')
+        .populate('book', 'bookNumber title')
+        .populate('chapter', 'chapterNumber title')
         .lean(),
       Model.countDocuments(filter)
     ]);
-
-    if (lang === 'ar') {
-      for (const q of questions) {
-        localizeArabicRelations(q);
-        delete q.book?.titleAr;
-        delete q.chapter?.titleAr;
-      }
-      await addArabicFallback(questions);
-    }
 
     res.json({
       success: true,
@@ -229,6 +120,7 @@ exports.searchQuestions = async (req, res) => {
       total,
       page: parseInt(page),
       totalPages: Math.ceil(total / parseInt(limit)),
+      maxQuestionNumber,
       data: questions
     });
   } catch (error) {
@@ -239,12 +131,11 @@ exports.searchQuestions = async (req, res) => {
 // GET /api/quiz/:bookNumber?count=10 - Generate quiz from a book
 exports.getBookQuiz = async (req, res) => {
   try {
-    const { bookNumber } = req.params;
     const count = parseInt(req.query.count) || 10;
-    const lang = req.query.lang;
-    const Model = getModel(lang);
+    const lang = language(req);
+    const { Book: BookModel, Question: Model } = catalogueFor(lang);
 
-    const book = await Book.findOne({ bookNumber: parseInt(bookNumber) });
+    const book = await BookModel.findOne({ bookNumber: parseInt(req.params.bookNumber) });
     if (!book) {
       return res.status(404).json({ success: false, error: 'Book not found' });
     }
@@ -257,18 +148,17 @@ exports.getBookQuiz = async (req, res) => {
           questionNumber: 1,
           question: 1,
           answer: 1,
-          chapterTitle: 1
+          chapterTitle: 1,
+          image: 1
         }
       }
     ]);
-
-    const bookTitle = lang === 'ar' && book.titleAr ? book.titleAr : book.title;
 
     res.json({
       success: true,
       quiz: {
         bookNumber: book.bookNumber,
-        bookTitle,
+        bookTitle: book.title,
         questionCount: questions.length,
         questions
       }
@@ -281,19 +171,18 @@ exports.getBookQuiz = async (req, res) => {
 // GET /api/quiz/chapter/:bookNumber/:chapterNumber?count=10
 exports.getChapterQuiz = async (req, res) => {
   try {
-    const { bookNumber, chapterNumber } = req.params;
     const count = parseInt(req.query.count) || 10;
-    const lang = req.query.lang;
-    const Model = getModel(lang);
+    const lang = language(req);
+    const { Book: BookModel, Chapter: ChapterModel, Question: Model } = catalogueFor(lang);
 
-    const book = await Book.findOne({ bookNumber: parseInt(bookNumber) });
+    const book = await BookModel.findOne({ bookNumber: parseInt(req.params.bookNumber) });
     if (!book) {
       return res.status(404).json({ success: false, error: 'Book not found' });
     }
 
-    const chapter = await Chapter.findOne({
+    const chapter = await ChapterModel.findOne({
       book: book._id,
-      chapterNumber: parseInt(chapterNumber)
+      chapterNumber: parseInt(req.params.chapterNumber)
     });
     if (!chapter) {
       return res.status(404).json({ success: false, error: 'Chapter not found' });
@@ -306,21 +195,19 @@ exports.getChapterQuiz = async (req, res) => {
         $project: {
           questionNumber: 1,
           question: 1,
-          answer: 1
+          answer: 1,
+          image: 1
         }
       }
     ]);
-
-    const bookTitle = lang === 'ar' && book.titleAr ? book.titleAr : book.title;
-    const chapterTitle = lang === 'ar' && chapter.titleAr ? chapter.titleAr : chapter.title;
 
     res.json({
       success: true,
       quiz: {
         bookNumber: book.bookNumber,
-        bookTitle,
+        bookTitle: book.title,
         chapterNumber: chapter.chapterNumber,
-        chapterTitle,
+        chapterTitle: chapter.title,
         questionCount: questions.length,
         questions
       }
@@ -333,10 +220,19 @@ exports.getChapterQuiz = async (req, res) => {
 // GET /api/stats - General statistics
 exports.getStats = async (req, res) => {
   try {
-    const [bookCount, chapterCount, questionCount, questionArCount] = await Promise.all([
+    const [
+      bookCount,
+      chapterCount,
+      questionCount,
+      bookArCount,
+      chapterArCount,
+      questionArCount
+    ] = await Promise.all([
       Book.countDocuments(),
       Chapter.countDocuments(),
       Question.countDocuments(),
+      BookAr.countDocuments(),
+      ChapterAr.countDocuments(),
       QuestionAr.countDocuments()
     ]);
 
@@ -357,7 +253,10 @@ exports.getStats = async (req, res) => {
         books: bookCount,
         chapters: chapterCount,
         questions: questionCount + questionArCount,
+        booksByLang: { en: bookCount, ar: bookArCount },
+        chaptersByLang: { en: chapterCount, ar: chapterArCount },
         questionsByLang: { en: questionCount, ar: questionArCount },
+        maxQuestionNumber: MAX_QUESTION_NUMBER,
         questionsByBook: { en: bookStatsEn, ar: bookStatsAr }
       }
     });

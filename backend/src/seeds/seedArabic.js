@@ -3,166 +3,155 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 const connectDB = require('../../config/db');
-const { Book, Chapter, QuestionAr } = require('../models');
-const { BOOKS, CHAPTERS } = require('./structureData');
+const { BookAr, ChapterAr, QuestionAr } = require('../models');
 
-async function seedArabic() {
-  await connectDB();
-  console.log('Connected to MongoDB. Seeding Arabic content...\n');
+const DATA_DIR = path.join(__dirname, '../../data');
+const PUBLIC_DIR = path.join(__dirname, '../../public');
+const STRUCTURE_FILE = path.join(DATA_DIR, 'arabic_structure.json');
+const QUESTION_FILE = path.join(DATA_DIR, 'catechism_qa_ar.json');
 
-  // Clear existing Arabic data
+function loadJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function validateArabicSeed(structure, questions) {
+  const errors = [];
+  const books = structure.books || [];
+  const sections = books.flatMap((book) => book.sections || []);
+
+  if (books.length !== 7) errors.push(`expected 7 books, found ${books.length}`);
+  if (sections.length !== 83) errors.push(`expected 83 sections, found ${sections.length}`);
+  if (questions.length !== 1424) errors.push(`expected 1424 questions, found ${questions.length}`);
+
+  const numbers = questions.map((row) => row.questionNumber);
+  if (numbers.some((number, index) => number !== index + 1)) {
+    errors.push('question numbers are not contiguous from 1');
+  }
+
+  const sourceQuestionIds = questions.map((row) => row.sourceQuestionId);
+  if (new Set(sourceQuestionIds).size !== sourceQuestionIds.length) {
+    errors.push('duplicate sourceQuestionId values');
+  }
+
+  const sourceSectionIds = sections.map((section) => section.sourceSectionId);
+  if (new Set(sourceSectionIds).size !== sourceSectionIds.length) {
+    errors.push('duplicate sourceSectionId values');
+  }
+
+  const sourceBookIds = books.map((book) => book.sourceBookId);
+  if (new Set(sourceBookIds).size !== sourceBookIds.length) {
+    errors.push('duplicate sourceBookId values');
+  }
+
+  for (const row of questions) {
+    if (!row.question || !row.question.trim()) {
+      errors.push(`question ${row.questionNumber} has no text`);
+    }
+    if (!row.answer || !row.answer.trim()) {
+      errors.push(`question ${row.questionNumber} has no answer`);
+    }
+    if (!row.image) continue;
+    const imageFile = path.join(PUBLIC_DIR, row.image.replace(/^\//, ''));
+    if (!fs.existsSync(imageFile)) {
+      errors.push(`question ${row.questionNumber} image is missing: ${row.image}`);
+    }
+  }
+
+  return errors;
+}
+
+async function seedArabicContent({ dryRun = false } = {}) {
+  const structure = loadJson(STRUCTURE_FILE);
+  const questions = loadJson(QUESTION_FILE);
+  const errors = validateArabicSeed(structure, questions);
+  if (errors.length) {
+    throw new Error(errors.join('\n'));
+  }
+
+  const target = {
+    books: structure.books.length,
+    sections: structure.books.reduce((total, book) => total + book.sections.length, 0),
+    questions: questions.length
+  };
+
+  if (dryRun) return target;
+
   await QuestionAr.deleteMany({});
-  console.log('Cleared existing QuestionAr data.\n');
+  await ChapterAr.deleteMany({});
+  await BookAr.deleteMany({});
 
-  // Load the complete Arabic Q&A extraction.
-  const qaPath = path.join(__dirname, '../../data/catechism_qa_ar.json');
-  if (!fs.existsSync(qaPath)) {
-    throw new Error('catechism_qa_ar.json not found. Run extractArabicAnswers.py first.');
-  }
-  const arabicQa = JSON.parse(fs.readFileSync(qaPath, 'utf8'));
-  if (arabicQa.length !== 1452) {
-    throw new Error(`Arabic dataset is incomplete (${arabicQa.length}/1452 records).`);
-  }
-  const arabicQuestions = new Map(
-    arabicQa.map(row => [row.questionNumber, row])
-  );
-  let missingAnswerCount = 0;
-  for (let qNum = 1; qNum <= 1452; qNum++) {
-    const row = arabicQuestions.get(qNum);
-    if (!row || !row.question?.trim()) {
-      throw new Error(`Arabic Q${qNum} is missing its question.`);
-    }
-    if (!row.answer?.trim()) missingAnswerCount++;
-  }
-  if (missingAnswerCount > 0) {
-    console.log(`${missingAnswerCount} question(s) have no Arabic answer yet; the API falls back to English for these until reviewed.\n`);
-  }
-  console.log(`Loaded and validated ${arabicQuestions.size} Arabic Q&A records.\n`);
-
-  // Load Arabic book/chapter titles if available
-  const titlesPath = path.join(__dirname, '../../data/arabic_titles.json');
-  let arabicTitles = { books: {}, chapters: {} };
-  if (fs.existsSync(titlesPath)) {
-    arabicTitles = JSON.parse(fs.readFileSync(titlesPath, 'utf8'));
-    console.log(`Loaded Arabic titles for ${Object.keys(arabicTitles.books).length} books.\n`);
-  }
-
-  // Get existing Book and Chapter docs from the English seed
-  const bookDocs = {};
-  for (const bookData of BOOKS) {
-    const book = await Book.findOne({ bookNumber: bookData.bookNumber });
-    if (!book) {
-      console.error(`Book ${bookData.bookNumber} not found. Run "npm run seed" first.`);
-      process.exit(1);
-    }
-    bookDocs[bookData.bookNumber] = book;
-
-    // Update Arabic titles if available
-    if (arabicTitles.books[bookData.bookNumber]) {
-      book.titleAr = arabicTitles.books[bookData.bookNumber].title;
-      if (arabicTitles.books[bookData.bookNumber].description) {
-        book.descriptionAr = arabicTitles.books[bookData.bookNumber].description;
-      }
-      await book.save();
-    }
-  }
-
-  const chapterDocs = {};
-  for (const chapData of CHAPTERS) {
-    const chapter = await Chapter.findOne({
-      book: bookDocs[chapData.bookNumber]._id,
-      chapterNumber: chapData.chapterNumber
+  const bookDocs = new Map();
+  for (const bookData of structure.books) {
+    const book = await BookAr.create({
+      bookNumber: bookData.bookNumber,
+      sourceBookId: bookData.sourceBookId,
+      title: bookData.title,
+      slug: bookData.slug,
+      questionRange: bookData.questionRange,
+      totalQuestions: bookData.totalQuestions
     });
-    if (!chapter) {
-      console.error(`Chapter ${chapData.bookNumber}-${chapData.chapterNumber} not found.`);
-      continue;
-    }
-    chapterDocs[`${chapData.bookNumber}-${chapData.chapterNumber}`] = chapter;
-
-    if (arabicTitles.chapters[`${chapData.bookNumber}-${chapData.chapterNumber}`]) {
-      chapter.titleAr = arabicTitles.chapters[`${chapData.bookNumber}-${chapData.chapterNumber}`];
-      await chapter.save();
-    }
+    bookDocs.set(bookData.bookNumber, book);
   }
 
-  // Validate alignment: every Arabic questionNumber must have a matching English book/chapter
-  let validationErrors = 0;
-  for (const qNum of arabicQuestions.keys()) {
-    const bookData = BOOKS.find(
-      b => qNum >= b.questionRange.start && qNum <= b.questionRange.end
-    );
-    if (!bookData) {
-      console.error(`VALIDATION FAIL: Question ${qNum} has no matching book.`);
-      validationErrors++;
+  const chapterDocs = new Map();
+  for (const bookData of structure.books) {
+    const book = bookDocs.get(bookData.bookNumber);
+    for (const sectionData of bookData.sections) {
+      const chapter = await ChapterAr.create({
+        book: book._id,
+        bookNumber: bookData.bookNumber,
+        chapterNumber: sectionData.chapterNumber,
+        sourceSectionId: sectionData.sourceSectionId,
+        title: sectionData.title,
+        slug: sectionData.slug,
+        questionRange: sectionData.questionRange,
+        totalQuestions: sectionData.totalQuestions,
+        sortOrder: sectionData.sortOrder
+      });
+      chapterDocs.set(`${bookData.bookNumber}-${sectionData.chapterNumber}`, chapter);
     }
   }
 
-  if (validationErrors > 0) {
-    console.error(`\n${validationErrors} alignment errors found. Aborting seed.`);
-    await mongoose.connection.close();
-    process.exit(1);
-  }
-
-  // Create QuestionAr documents
-  let createdCount = 0;
-  const bulk = [];
-
-  for (let qNum = 1; qNum <= 1452; qNum++) {
-    const bookData = BOOKS.find(
-      b => qNum >= b.questionRange.start && qNum <= b.questionRange.end
-    );
-    if (!bookData) continue;
-
-    const chapData = CHAPTERS.find(
-      c => c.bookNumber === bookData.bookNumber &&
-           qNum >= c.questionRange.start &&
-           qNum <= c.questionRange.end
-    );
-    if (!chapData) continue;
-
-    const book = bookDocs[bookData.bookNumber];
-    const chapter = chapterDocs[`${chapData.bookNumber}-${chapData.chapterNumber}`];
-    const arText = arabicQuestions.get(qNum);
-
-    if (!arText) continue;
-
-    bulk.push({
-      questionNumber: qNum,
-      question: arText.question,
-      answer: arText.answer,
+  const questionDocs = questions.map((row) => {
+    const book = bookDocs.get(row.bookNumber);
+    const chapter = chapterDocs.get(`${row.bookNumber}-${row.chapterNumber}`);
+    if (!book || !chapter) {
+      throw new Error(`question ${row.questionNumber} has no book or section`);
+    }
+    return {
+      questionNumber: row.questionNumber,
+      sourceQuestionId: row.sourceQuestionId,
+      question: row.question,
+      answer: row.answer,
+      image: row.image || '',
       book: book._id,
       chapter: chapter._id,
-      bookNumber: bookData.bookNumber,
-      chapterTitle: chapData.titleAr || chapData.title,
+      bookNumber: row.bookNumber,
+      chapterTitle: chapter.title,
       scriptureReferences: [],
       patristicQuotes: [],
       footnotes: [],
       tags: []
-    });
-    createdCount++;
-  }
-
-  await QuestionAr.insertMany(bulk);
-  console.log(`Created ${createdCount} Arabic QuestionAr documents.\n`);
-
-  // Stats
-  const filled = await QuestionAr.countDocuments({
-    question: { $ne: '' }
-  });
-  const withAnswer = await QuestionAr.countDocuments({
-    answer: { $ne: '' }
+    };
   });
 
-  console.log('Arabic seed complete!');
-  console.log('─────────────────────────────────────');
-  console.log(`  QuestionAr docs: ${createdCount}`);
-  console.log(`  With question text: ${filled}`);
-  console.log(`  With answer text: ${withAnswer}`);
-  console.log('─────────────────────────────────────');
+  await QuestionAr.insertMany(questionDocs);
+  return target;
+}
+
+async function main() {
+  await connectDB();
+  console.log('Connected to MongoDB. Seeding Arabic content...\n');
+  const result = await seedArabicContent();
+  console.log(`Created ${result.books} books, ${result.sections} sections, ${result.questions} questions.`);
   await mongoose.connection.close();
 }
 
-seedArabic().catch(err => {
-  console.error('Arabic seed failed:', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error('Arabic seed failed:', error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { seedArabicContent, validateArabicSeed };

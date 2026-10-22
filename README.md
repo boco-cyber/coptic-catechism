@@ -95,6 +95,10 @@ Run commands from `backend/`:
 npm run seed            # Seed the English books, chapters, and questions
 npm run seed:arabic     # Seed Arabic content after the English seed
 npm run seed:questions  # Run the question extraction/seeding utility
+npm run format:data     # Reapply paragraph/footnote formatting to the JSON datasets
+npm run format:data:check  # Fail if the committed datasets are stale
+npm run format:mongo    # Dry-run MongoDB formatting refresh
+npm run format:mongo -- --apply  # Apply the formatting refresh
 node src/seeds/createAdmin.js <username>
 ```
 
@@ -109,7 +113,7 @@ the relevant script and data inputs before running them against production.
 
 ## Tests
 
-Run the Node.js built-in test suite from `backend/`:
+Run the Node.js and Python formatter test suites from `backend/`:
 
 ```bash
 npm test

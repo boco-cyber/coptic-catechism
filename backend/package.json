@@ -9,7 +9,10 @@
     "seed": "node src/seeds/seedDatabase.js",
     "seed:questions": "node src/seeds/extractAndSeed.js",
     "seed:arabic": "node src/seeds/seedArabic.js",
-    "test": "node --test"
+    "format:data": "python3 src/seeds/formatDatasets.py",
+    "format:data:check": "python3 src/seeds/formatDatasets.py --check",
+    "format:mongo": "node src/seeds/refreshFormatting.js",
+    "test": "node --test && python3 -m unittest discover -s test -p 'test_*.py'"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

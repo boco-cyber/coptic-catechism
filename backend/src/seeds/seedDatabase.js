@@ -101,7 +101,7 @@ async function seed() {
       chapterTitle: chapData.title,
       scriptureReferences: [],
       patristicQuotes: [],
-      footnotes: [],
+      footnotes: Array.isArray(qa?.footnotes) ? qa.footnotes : [],
       tags: []
     });
     questionCount++;

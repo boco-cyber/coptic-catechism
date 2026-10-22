@@ -12,8 +12,12 @@ import argparse
 import json
 import os
 import re
+import sys
 import unicodedata
 from difflib import SequenceMatcher
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from formatting import format_arabic_dataset
 
 OUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data"))
 BOOK_RANGES = {
@@ -238,6 +242,7 @@ def main():
                 bad_answers += 1
     if bad_answers:
         print(f"Cleared {bad_answers} corrupted answers")
+    output = format_arabic_dataset(output)
     output_path = os.path.join(OUT_DIR, "catechism_qa_ar.json")
     if args.check:
         if not os.path.exists(output_path) or json.load(open(output_path, encoding="utf-8")) != output:

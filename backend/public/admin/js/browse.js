@@ -1,4 +1,4 @@
-import { api } from './api.js';
+import { api, LANG } from './api.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -30,9 +30,8 @@ export function initBrowse({ onRowSelected }) {
       tr.innerHTML = `
         <td>${esc(row.questionNumber)}</td>
         <td>${esc(row.bookNumber)}</td>
-        <td class="snippet">${esc(row.question_en).slice(0, 60)}</td>
-        <td class="snippet" dir="rtl">${esc(row.question_ar).slice(0, 60)}</td>
-        <td>${row.needsReview ? '<span class="badge badge-warn">needs review</span>' : '<span class="badge badge-ok">reviewed</span>'}</td>
+        <td class="snippet" ${LANG === 'ar' ? 'dir="rtl"' : ''}>${esc(row.question).slice(0, 80)}</td>
+        <td>${LANG === 'ar' ? (row.needsReview ? '<span class="badge badge-warn">needs review</span>' : '<span class="badge badge-ok">reviewed</span>') : ''}</td>
       `;
       tr.addEventListener('click', () => onRowSelected(row.questionNumber));
       tableBody.appendChild(tr);

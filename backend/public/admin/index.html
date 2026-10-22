@@ -11,6 +11,10 @@
 <header class="admin-header">
   <h1>Coptic Catechism Admin</h1>
   <div id="stats" class="stats"></div>
+  <div class="admin-lang">
+    <a href="?lang=en" data-admin-lang="en">EN</a>
+    <a href="?lang=ar" data-admin-lang="ar">AR</a>
+  </div>
   <button id="logout" type="button">Log out</button>
 </header>
 
@@ -24,7 +28,7 @@
     <form id="browseFilters" class="filters">
       <label>Book <input type="number" name="book" min="1" max="7"></label>
       <label>Chapter <input type="text" name="chapter"></label>
-      <label>Needs review
+      <label data-lang-only="ar">Needs review
         <select name="needsReview">
           <option value="">Any</option>
           <option value="true">Needs review</option>
@@ -37,7 +41,7 @@
     <p id="browseStatus" class="status"></p>
     <table id="browseTable">
       <thead>
-        <tr><th>#</th><th>Book</th><th>English</th><th>Arabic</th><th>Status</th></tr>
+        <tr><th>#</th><th>Book</th><th>Question</th><th>Status</th></tr>
       </thead>
       <tbody></tbody>
     </table>
@@ -52,7 +56,7 @@
     <form id="exportFilters" class="filters">
       <label>Book <input type="number" name="book" min="1" max="7"></label>
       <label>Chapter <input type="text" name="chapter"></label>
-      <label>Needs review
+      <label data-lang-only="ar">Needs review
         <select name="needsReview">
           <option value="">Any</option>
           <option value="true">Needs review</option>
@@ -81,20 +85,14 @@
     </div>
     <form id="editForm">
       <div class="edit-grid">
-        <label>English question
-          <textarea name="question_en" rows="3"></textarea>
+        <label>Question
+          <textarea name="question" rows="3"></textarea>
         </label>
-        <label class="rtl">Arabic question
-          <textarea name="question_ar" rows="3" dir="rtl"></textarea>
-        </label>
-        <label>English answer
-          <textarea name="answer_en" rows="10"></textarea>
-        </label>
-        <label class="rtl">Arabic answer
-          <textarea name="answer_ar" rows="10" dir="rtl"></textarea>
+        <label>Answer
+          <textarea name="answer" rows="10"></textarea>
         </label>
       </div>
-      <label class="checkbox-row">
+      <label class="checkbox-row" data-lang-only="ar">
         <input type="checkbox" name="needsReview"> Still needs review
       </label>
       <div id="editError" class="error" hidden></div>

@@ -28,8 +28,12 @@ const DATA_DIR = path.join(__dirname, '../../data');
 const PYTHON_EXTRACTOR = `
 import fitz
 import json
+import os
 import re
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from formatting import format_english_dataset
 
 pdf_path = sys.argv[1]
 doc = fitz.open(pdf_path)
@@ -70,7 +74,7 @@ for r in results:
     if n not in deduped or len(r['answer']) > len(deduped[n]['answer']):
         deduped[n] = r
 
-print(json.dumps(list(deduped.values())))
+print(json.dumps(format_english_dataset(sorted(deduped.values(), key=lambda r: r['questionNumber']))))
 `;
 
 async function extractAndSeed() {
@@ -116,7 +120,8 @@ async function extractAndSeed() {
           { questionNumber: qa.questionNumber },
           {
             question: qa.question,
-            answer: qa.answer
+            answer: qa.answer,
+            footnotes: qa.footnotes || []
           },
           { new: true }
         );

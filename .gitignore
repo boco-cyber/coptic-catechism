@@ -16,3 +16,7 @@ backend/data/verification/
 # Local secrets — never commit
 backend/.env
 New Text Document.txt
+
+# Python bytecode
+__pycache__/
+*.pyc

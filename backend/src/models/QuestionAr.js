@@ -6,7 +6,7 @@ const questionArSchema = new mongoose.Schema({
     required: true,
     unique: true,
     min: 1,
-    max: 1452
+    max: 1424
   },
   question: {
     type: String,
@@ -20,13 +20,18 @@ const questionArSchema = new mongoose.Schema({
   },
   book: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Book',
+    ref: 'BookAr',
     required: true
   },
   chapter: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Chapter',
+    ref: 'ChapterAr',
     required: true
+  },
+  sourceQuestionId: {
+    type: Number,
+    required: true,
+    unique: true
   },
   bookNumber: {
     type: Number,
@@ -35,6 +40,11 @@ const questionArSchema = new mongoose.Schema({
   chapterTitle: {
     type: String,
     trim: true
+  },
+  image: {
+    type: String,
+    trim: true,
+    default: ''
   },
   scriptureReferences: [{
     type: String,
