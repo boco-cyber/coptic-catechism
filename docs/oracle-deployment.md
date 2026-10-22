@@ -1,209 +1,158 @@
-# Deploying to Oracle Cloud Infrastructure (OCI)
+# Deploying to Oracle Cloud Infrastructure
 
-## Overview
+This guide deploys the repository's **single Express application** to an OCI
+Compute VM. Express serves the public web app, admin panel, and API from the
+same Node.js process; there is no separate frontend build or upload step.
+MongoDB can be hosted on MongoDB Atlas or another reachable MongoDB service.
 
-Oracle Cloud's **Always Free** tier gives you:
-- **2 AMD VMs** (1/8 OCPU, 1 GB RAM each) or **1 ARM VM** (4 OCPUs, 24 GB RAM)
-- 200 GB block storage
-- 10 TB/month outbound data
+## 1. Create and configure a VM
 
-This is more than enough for the Coptic Catechism app.
+Create an OCI Compute instance running Ubuntu 22.04 or later and configure SSH
+access with your public key. Allow inbound TCP traffic for SSH (22), HTTP (80),
+and HTTPS (443) in the VCN security rules. Restrict SSH to trusted source
+addresses where possible.
 
-## Architecture on OCI
+Connect to the VM:
 
-```
-Internet
-   │
-   ├── yourapp.com (frontend) ──► OCI VM or Object Storage (static)
-   │
-   └── api.yourapp.com (backend) ──► OCI VM (Node.js + Express)
-                                         │
-                                         └──► MongoDB Atlas (free tier)
-```
-
-## Step 1: Create an OCI Account
-
-1. Go to https://cloud.oracle.com/
-2. Sign up for a free account
-3. Choose your home region (closest to your users)
-
-## Step 2: Create an ARM VM (Recommended)
-
-The ARM Ampere A1 instance is the best free-tier option:
-
-1. Go to **Compute → Instances → Create Instance**
-2. Shape: **VM.Standard.A1.Flex** (ARM)
-   - OCPUs: 2 (of your 4 free)
-   - Memory: 12 GB (of your 24 free)
-3. Image: **Ubuntu 22.04** (or 24.04)
-4. Add your SSH public key
-5. Under **Networking**: Create a new VCN or use default
-6. Click **Create**
-
-## Step 3: Configure Networking
-
-### Open ports in Security List:
-1. Go to **Networking → Virtual Cloud Networks → your VCN → Security Lists**
-2. Add Ingress Rules:
-   - Port 80 (HTTP)
-   - Port 443 (HTTPS)
-   - Port 5000 (API, or use Nginx reverse proxy)
-
-### Configure iptables on the VM:
-```bash
-sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-sudo iptables -I INPUT -p tcp --dport 443 -j ACCEPT
-sudo iptables -I INPUT -p tcp --dport 5000 -j ACCEPT
-sudo netfilter-persistent save
-```
-
-## Step 4: Set Up the Server
-
-SSH into your VM:
 ```bash
 ssh ubuntu@<your-vm-public-ip>
 ```
 
-Install dependencies:
-```bash
-# Update system
-sudo apt update && sudo apt upgrade -y
+Install Node.js 20, Git, Nginx, and PM2:
 
-# Install Node.js 20
+```bash
+sudo apt update
+sudo apt install -y ca-certificates curl git nginx
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
-
-# Install Nginx (reverse proxy)
-sudo apt install -y nginx
-
-# Install PM2 (process manager)
-sudo npm install -g pm2
-
-# Install Git
-sudo apt install -y git
+sudo npm install --global pm2
 ```
 
-## Step 5: Deploy the Backend
+## 2. Install the application
+
+Use the actual repository URL and a deployment directory of your choice:
 
 ```bash
-# Clone your repo
-git clone https://github.com/yourusername/coptic-catechism.git
+git clone https://github.com/boco-cyber/coptic-catechism.git
 cd coptic-catechism/backend
-
-# Install dependencies
-npm install --production
-
-# Create .env
+npm ci --omit=dev
 cp .env.example .env
-nano .env  # Add your MongoDB Atlas URI
-
-# Seed the database
-npm run seed
-# Then copy PDFs to data/ and run:
-npm run seed:questions
-
-# Start with PM2
-pm2 start src/server.js --name catechism-api
-pm2 save
-pm2 startup  # Follow the instructions to auto-start on boot
+nano .env
 ```
 
-## Step 6: Configure Nginx
+Set at least the following values in `backend/.env`:
+
+```dotenv
+MONGODB_URI=<mongodb-connection-string>
+NODE_ENV=production
+PORT=5000
+SESSION_SECRET=<long-random-secret>
+CORS_ORIGINS=https://your-domain.example
+```
+
+Set `CORS_ORIGINS` to the origin(s) allowed to make credentialed cross-origin
+requests. If the site and API use the same origin, cross-origin access may not
+be needed. Keep `.env` private and do not commit it.
+
+## 3. Seed data and create an admin
+
+For a new database, run the seed scripts from `backend/` as appropriate:
 
 ```bash
-sudo nano /etc/nginx/sites-available/catechism
+npm run seed
+npm run seed:arabic
 ```
+
+These scripts write to the configured database. Do not re-run them against a
+populated production database without reviewing their behavior and the
+intended effect on existing data.
+
+Create an admin account interactively:
+
+```bash
+node src/seeds/createAdmin.js <username>
+```
+
+The script prompts for the password. The admin panel is available at
+`https://your-domain.example/admin/login.html` after the service is running.
+
+## 4. Run the service
+
+From `backend/`:
+
+```bash
+pm2 start src/server.js --name coptic-catechism
+pm2 save
+pm2 startup
+```
+
+Follow the command printed by `pm2 startup` to enable startup after reboot.
+The service listens on port `5000` by default. Check it locally on the VM:
+
+```bash
+curl http://127.0.0.1:5000/health
+```
+
+## 5. Configure Nginx
+
+Create `/etc/nginx/sites-available/coptic-catechism`:
 
 ```nginx
 server {
     listen 80;
-    server_name yourapp.com api.yourapp.com;
+    server_name your-domain.example;
 
-    # API
-    location /api {
-        proxy_pass http://localhost:5000;
+    location / {
+        proxy_pass http://127.0.0.1:5000;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_cache_bypass $http_upgrade;
-    }
-
-    # Health check
-    location /health {
-        proxy_pass http://localhost:5000;
-    }
-
-    # Frontend (static files)
-    location / {
-        root /var/www/catechism;
-        try_files $uri /index.html;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```
 
-Enable and restart:
+Enable the site and verify the configuration:
+
 ```bash
-sudo ln -s /etc/nginx/sites-available/catechism /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/coptic-catechism /etc/nginx/sites-enabled/coptic-catechism
 sudo nginx -t
-sudo systemctl restart nginx
+sudo systemctl reload nginx
 ```
 
-## Step 7: Deploy the Frontend
+Because the Node process serves both static files and API routes, Nginx proxies
+the entire site to port `5000`; it does not need a separate frontend directory.
 
-Build locally and copy to server:
-```bash
-# On your local machine
-cd frontend
-npm run build
+## 6. Enable HTTPS
 
-# Copy to server
-scp -r build/* ubuntu@<vm-ip>:/var/www/catechism/
-```
-
-Or build on the server:
-```bash
-cd ~/coptic-catechism/frontend
-npm install
-npm run build
-sudo cp -r build/* /var/www/catechism/
-```
-
-## Step 8: Set Up SSL (HTTPS)
+Point the domain's DNS record at the VM, then install and run Certbot:
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d yourapp.com -d api.yourapp.com
+sudo certbot --nginx -d your-domain.example
 ```
 
-## Step 9: MongoDB Atlas Setup
+Certbot configures TLS in Nginx. The Express app must run with
+`NODE_ENV=production` and a strong `SESSION_SECRET` so admin sessions use
+secure cookies behind the reverse proxy.
 
-1. Go to https://www.mongodb.com/cloud/atlas
-2. Create a free M0 cluster
-3. Under **Network Access**: Add your OCI VM's public IP
-4. Under **Database Access**: Create a user
-5. Get the connection string and add it to your `.env`
+## Verify and operate
 
-## Monitoring
+- Public site: `https://your-domain.example/`
+- Arabic site: `https://your-domain.example/ar/`
+- Health check: `https://your-domain.example/health`
+- API: `https://your-domain.example/api/books`
+- Admin: `https://your-domain.example/admin/login.html`
+
+Useful service commands:
 
 ```bash
-# Check API status
 pm2 status
-pm2 logs catechism-api
-
-# Check Nginx
+pm2 logs coptic-catechism
 sudo systemctl status nginx
-sudo tail -f /var/log/nginx/error.log
-
-# System resources
-htop
 ```
 
-## Cost: $0/month
-
-Everything above uses free-tier resources:
-- OCI VM: Always Free
-- MongoDB Atlas: M0 Free Cluster (512 MB)
-- SSL: Let's Encrypt (free)
-- DNS: Use Cloudflare free tier for DNS management
+Keep the VM, Node.js, Nginx, and application dependencies updated. Restrict
+MongoDB network access to the VM where supported, and back up the database
+before performing content imports or reseeds.

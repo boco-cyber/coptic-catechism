@@ -1,131 +1,153 @@
-# Coptic Catechism App
+# Coptic Catechism
 
-Continuation handoff: [`docs/AGENT_HANDOFF_2026-07-13.md`](docs/AGENT_HANDOFF_2026-07-13.md).
+A bilingual educational platform based on *Catechism of the Coptic Orthodox
+Church* by Fr. Tadros Yacoub Malaty (Volumes 1 & 2, 2023 edition).
 
-A public catechesis educational platform based on **"Catechism of the Coptic Orthodox Church"** by Fr. Tadros Yacoub Malaty (Volumes 1 & 2, 2023 Edition).
+## Current application
 
-## Content Structure
+This repository contains one Node.js application in [`backend/`](backend/):
 
-The app serves **1,452 questions & answers** organized across **7 books**:
+- Express serves the English and Arabic web interface and the admin panel from
+  `backend/public/`.
+- The REST API and admin API run in the same Express process.
+- MongoDB stores books, chapters, questions, Arabic translations, admin users,
+  and admin sessions.
+- The web client is plain HTML, CSS, and JavaScript. There is no separate
+  frontend build or mobile/Expo application in this repository.
 
-| Book | Title | Questions | Volume |
-|------|-------|-----------|--------|
-| 1 | Introduction to the Coptic Catechism | Q1 – Q92 | 1 |
-| 2 | Christian Dogma | Q93 – Q448 | 1 |
-| 3 | The Church: The Kingdom of God | Q449 – Q877 | 1 |
-| 4 | Church Worship as a Journey to Heaven | Q878 – Q1112 | 2 |
-| 5 | The Believer and the Heavenly Hosts | Q1113 – Q1184 | 2 |
-| 6 | Christian Concepts and Everyday Life | Q1185 – Q1356 | 2 |
-| 7 | Eschatology and the After Life | Q1357 – Q1452 | 2 |
+The public site is available at `/` (English) and `/ar/` (Arabic). Arabic mode
+uses right-to-left layout. Add `?lang=ar` to public API requests for Arabic
+content.
 
-## Architecture
+## Repository layout
 
+```text
+.
+├── backend/
+│   ├── config/              MongoDB connection
+│   ├── data/                Seed data and source workbooks
+│   ├── public/              Public site and admin-panel assets
+│   ├── src/
+│   │   ├── controllers/     Public and admin request handlers
+│   │   ├── middleware/      Admin authentication and login rate limiting
+│   │   ├── models/          Mongoose models
+│   │   ├── routes/          Public API and admin API routes
+│   │   ├── seeds/           Database and content-import scripts
+│   │   ├── services/        Shared business logic
+│   │   ├── utils/           Shared utilities
+│   │   └── server.js        Express application entry point
+│   └── test/                Node.js tests
+└── docs/                    Setup, deployment, handoffs, and design records
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌──────────────┐
-│ Bilingual Web UI│────▶│  Express.js API  │────▶│   MongoDB    │
-│   (Coolify)     │     │    (Coolify)     │     │   (Atlas)    │
-└─────────────────┘     └─────────────────┘     └──────────────┘
-┌─────────────────┐            ▲
-│ React Native /  │────────────┘
-│   Expo (Mobile) │
-└─────────────────┘
-```
 
-### Tech Stack
-- **Database**: MongoDB Atlas (free tier) or self-hosted on Oracle Cloud
-- **Backend**: Node.js + Express.js REST API
-- **Web Frontend**: React + Tailwind CSS
-- **Mobile**: React Native (Expo)
-- **Hosting**: Oracle Cloud Infrastructure (OCI) free tier
+For a fuller documentation index, see [`docs/README.md`](docs/README.md).
 
-### Key Features
-- Browse books → chapters → questions/answers
-- Full-text search across all 1,452 Q&A entries
-- Quiz mode (test yourself per chapter or book)
-- Local bookmarks & progress tracking (no login required)
-- Responsive web + native mobile apps
+## Content
 
-## Getting Started
+The English catalog contains 1,452 questions and answers in seven books:
 
-### Prerequisites
-- Node.js 18+
-- MongoDB (Atlas free tier or local)
-- npm or yarn
+| Book | Title | Question range | Volume |
+|------|-------|----------------|--------|
+| 1 | Introduction to the Coptic Catechism | 1–92 | 1 |
+| 2 | Christian Dogma | 93–448 | 1 |
+| 3 | The Church: The Kingdom of God | 449–877 | 1 |
+| 4 | Church Worship as a Journey to Heaven | 878–1112 | 2 |
+| 5 | The Believer and the Heavenly Hosts | 1113–1184 | 2 |
+| 6 | Christian Concepts and Everyday Life | 1185–1356 | 2 |
+| 7 | Eschatology and the After Life | 1357–1452 | 2 |
 
-### Backend Setup
+Arabic text is maintained separately. Arabic question/answer coverage and
+review status may differ from the English catalog; do not treat the seed files
+as proof that every translation has been editorially reviewed.
+
+## Requirements
+
+- Node.js 20 (the version used by the Docker image)
+- npm
+- A reachable MongoDB instance
+
+## Local development
+
 ```bash
 cd backend
-cp .env.example .env    # Edit with your MongoDB URI
-npm install
-npm run seed            # Populate database with catechism content
-npm run dev             # Start development server on :5000
+npm ci
+cp .env.example .env
 ```
 
-The responsive bilingual web interface is served directly by Express from
-`backend/public/` at `/` (English) and `/ar/` (Arabic).
+Set `MONGODB_URI` in `backend/.env` to a development database before starting
+the server. Then run:
 
-### Mobile Setup
 ```bash
-cd mobile
-npm install
-npx expo start          # Start Expo dev server
+npm run dev
 ```
 
-## API Endpoints
+The application listens on port `5000` by default. Open `http://localhost:5000`
+for the English site, `http://localhost:5000/ar/` for Arabic, or
+`http://localhost:5000/admin/login.html` for the admin sign-in page.
+`PORT` and `CORS_ORIGINS` can be set in `backend/.env`. Production deployments
+must also set a unique `SESSION_SECRET`.
+
+## Database and admin scripts
+
+Run commands from `backend/`:
+
+```bash
+npm run seed            # Seed the English books, chapters, and questions
+npm run seed:arabic     # Seed Arabic content after the English seed
+npm run seed:questions  # Run the question extraction/seeding utility
+node src/seeds/createAdmin.js <username>
+```
+
+The admin creation command prompts for a password. To remove an admin account:
+
+```bash
+node src/seeds/createAdmin.js --delete <username>
+```
+
+Seed scripts write to the MongoDB database configured by `MONGODB_URI`. Review
+the relevant script and data inputs before running them against production.
+
+## Tests
+
+Run the Node.js built-in test suite from `backend/`:
+
+```bash
+npm test
+```
+
+## Public API
+
+All public endpoints are prefixed with `/api`. Append `?lang=ar` for Arabic
+content where available.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/books` | List all 7 books |
-| GET | `/api/books/:bookId` | Get book with chapters |
-| GET | `/api/books/:bookId/chapters/:chapterId` | Get chapter with questions |
-| GET | `/api/questions/:questionNumber` | Get single Q&A by number |
-| GET | `/api/questions/range/:start/:end` | Get Q&A range |
-| GET | `/api/search?q=keyword` | Full-text search |
-| GET | `/api/quiz/:bookId` | Get random quiz for a book |
-| GET | `/api/quiz/chapter/:chapterId` | Get random quiz for a chapter |
-| GET | `/api/stats` | General statistics |
+| GET | `/api/books` | List books |
+| GET | `/api/books/:bookNumber` | Get a book and its chapters |
+| GET | `/api/books/:bookNumber/chapters/:chapterNumber` | Get a chapter and its questions |
+| GET | `/api/questions/:questionNumber` | Get a question and answer |
+| GET | `/api/questions/range/:start/:end` | Get a range of questions |
+| GET | `/api/search?q=keyword` | Search questions |
+| GET | `/api/quiz/:bookNumber` | Get a book quiz |
+| GET | `/api/quiz/chapter/:bookNumber/:chapterNumber` | Get a chapter quiz |
+| GET | `/api/stats` | Get content statistics |
 
-### Arabic Language (`?lang=ar`)
-
-Append `?lang=ar` to any endpoint to get translated content:
-
-```
-GET /api/books?lang=ar
-GET /api/books/1?lang=ar
-GET /api/books/1/chapters/1?lang=ar
-GET /api/questions/42?lang=ar
-GET /api/questions/range/1/92?lang=ar
-GET /api/search?q=إيمان&lang=ar
-GET /api/quiz/1?lang=ar
-```
-
-- Book/chapter titles: swapped with Arabic equivalents (when populated)
-- Questions: served from the parallel `QuestionAr` collection
-- Reviewed Arabic answers are shown when populated. Until then, the API and web
-  interface explicitly fall back to the corresponding English answer.
-
-## Seeding the Database
-
-```bash
-cd backend
-
-# Seed English content (books, chapters, questions)
-npm run seed
-
-# Seed Arabic content (requires English seed to have run first)
-npm run seed:arabic
-
-# Extract questions from PDFs and seed
-npm run seed:questions
-```
+The admin panel is served at `/admin/login.html`; its authenticated endpoints
+are under `/admin/api` and support question editing, statistics, and XLSX
+import/export.
 
 ## Deployment
 
-- Public domain: `https://ccfm.copticfaith.org`
-- Coolify application: `coptic-catechism-api` (`qpu7udejfw6bt6qba7209vo2`)
-- Repository: `boco-cyber/coptic-catechism`, branch `main`
-- Build: `backend/Dockerfile`, exposed port `5000`
+The application can be deployed as a single Node service or with the supplied
+[`backend/Dockerfile`](backend/Dockerfile). See
+[`docs/oracle-deployment.md`](docs/oracle-deployment.md) for an OCI deployment
+guide.
 
-## License
+The currently documented public deployment is `https://ccfm.copticfaith.org`.
+Deployment settings and credentials are environment-specific and are not
+required for local development.
 
-Content © 2023 Fr. Tadros Yacoub Malaty. App code MIT licensed.
+## License and attribution
+
+Catechism content © 2023 Fr. Tadros Yacoub Malaty. Application code is MIT
+licensed.
