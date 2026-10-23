@@ -1,5 +1,18 @@
 # Deploying to Oracle Cloud Infrastructure
 
+## Current production deployment (2026-10-23)
+
+Production uses Docker on **AboHub (`155.248.209.35`)**, managed by the existing
+[Coolify dashboard](https://hub.copticfaith.org). Pushes to `main` trigger the
+signed GitHub webhook and deploy the existing Coolify application on AboHub.
+See [DEPLOYMENT.md](../DEPLOYMENT.md) for the application UUID, data, and recovery.
+MongoDB Atlas remains the data store.
+
+## Alternative manual VM setup
+
+The following standalone Node/Nginx/PM2 instructions are an alternative setup,
+not the procedure used by current production.
+
 This guide deploys the repository's **single Express application** to an OCI
 Compute VM. Express serves the public web app, admin panel, and API from the
 same Node.js process; there is no separate frontend build or upload step.

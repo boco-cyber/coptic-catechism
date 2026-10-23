@@ -189,3 +189,10 @@ required for local development.
 
 Catechism content © 2023 Fr. Tadros Yacoub Malaty. Application code is MIT
 licensed.
+
+
+## Production hosting
+
+Production runs on **AboHub (`155.248.209.35`)**, managed by the existing
+[Coolify dashboard](https://hub.copticfaith.org). See [DEPLOYMENT.md](DEPLOYMENT.md)
+for the deployment branch, application UUID, GitHub updates, data, and recovery.
