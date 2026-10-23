@@ -587,6 +587,56 @@ def validate_preserved(original: str, output_parts: list[str]) -> bool:
     )
 
 
+def normalize_english_body(answer: str) -> str:
+    """Join PDF-wrapped lines while preserving paragraphs and visible text.
+
+    This deliberately does not remove headers, extract footnotes, or drop
+    embedded questions. Those operations are only valid for the legacy
+    extraction path.
+    """
+    raw = answer.replace("\r\n", "\n").replace("\r", "\n")
+    lines = raw.split("\n")
+    lengths = [len(line.strip()) for line in lines if line.strip()]
+    max_length = (
+        statistics.quantiles(lengths, n=20)[-2]
+        if len(lengths) >= 20
+        else (max(lengths) if lengths else 90)
+    )
+    max_length = max(70, min(100, max_length))
+
+    paragraphs: list[str] = []
+    current: list[str] = []
+    blank = False
+    for line in lines:
+        if not line.strip():
+            blank = True
+            continue
+        text = line.strip()
+        if not current:
+            current = [text]
+            blank = False
+            continue
+        if should_break(
+            current[-1],
+            text,
+            max_length,
+            blank=blank,
+            current_text=" ".join(current),
+        ):
+            paragraphs.append(join_lines(current))
+            current = [text]
+        else:
+            current.append(text)
+        blank = False
+    if current:
+        paragraphs.append(join_lines(current))
+
+    body = "\n\n".join(paragraph for paragraph in paragraphs if paragraph.strip()).strip()
+    if not validate_preserved(answer, [body]):
+        raise ValueError("English normalization changed non-whitespace characters")
+    return body
+
+
 def format_english_dataset(rows: list[dict]) -> list[dict]:
     # A dataset that already carries a footnotes array has been through this
     # formatter. Re-running footnote detection on the separated body can
@@ -619,11 +669,5 @@ def format_arabic_dataset(rows: list[dict]) -> list[dict]:
         body = format_arabic_answer(row["answer"])
         if not validate_preserved(row["answer"], [body]):
             raise ValueError(f"Character loss while formatting Arabic Q{row['questionNumber']}")
-        output.append(
-            {
-                "questionNumber": row["questionNumber"],
-                "question": row["question"],
-                "answer": body,
-            }
-        )
+        output.append({**row, "answer": body})
     return output

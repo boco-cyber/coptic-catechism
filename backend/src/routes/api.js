@@ -7,6 +7,7 @@ const questionController = require('../controllers/questionController');
 router.get('/books', bookController.getAllBooks);
 router.get('/books/:bookNumber', bookController.getBook);
 router.get('/books/:bookNumber/chapters/:chapterNumber', bookController.getChapter);
+router.get('/books/:bookNumber/content', bookController.getBookContent);
 
 // ── Questions ─────────────────────────────────────────────────────
 router.get('/questions/:questionNumber', questionController.getQuestion);

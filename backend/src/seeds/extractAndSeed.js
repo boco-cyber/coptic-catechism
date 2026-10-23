@@ -7,7 +7,7 @@
  *   - Run "npm run seed" first to create the structure
  *
  * Usage:
- *   npm run seed:questions
+ *   node src/seeds/extractAndSeed.js
  *
  * This script:
  *   1. Uses Python (PyMuPDF) to extract text from both volumes

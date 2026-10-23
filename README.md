@@ -60,6 +60,34 @@ Arabic text is maintained separately. Arabic question/answer coverage and
 review status may differ from the English catalog; do not treat the seed files
 as proof that every translation has been editorially reviewed.
 
+## English source
+
+The English catalogue is generated from the verified extraction source:
+
+```bash
+export ENGLISH_SOURCE_DIR="/path/to/catechism_extraction"
+npm --prefix backend run sync:english
+npm --prefix backend run sync:english:check
+```
+
+The generator writes `backend/data/english_structure.json`,
+`backend/data/catechism_qa.json`,
+`backend/data/english_content_blocks.json`, and
+`backend/data/english_extraction_issues.json`. It validates source hashes,
+hierarchy, counts, exact question text, and whitespace-only answer
+normalization. Do not run the legacy English extraction scripts against these
+artifacts.
+
+Seed or migrate English only:
+
+```bash
+npm --prefix backend run seed
+npm --prefix backend run seed:english:migrate          # dry run
+npm --prefix backend run seed:english:migrate -- --apply
+```
+
+The migration is dry-run by default and never touches Arabic collections.
+
 ## Requirements
 
 - Node.js 20 (the version used by the Docker image)
@@ -94,13 +122,19 @@ Run commands from `backend/`:
 ```bash
 npm run seed            # Seed the English books, chapters, and questions
 npm run seed:arabic     # Seed Arabic content after the English seed
-npm run seed:questions  # Run the question extraction/seeding utility
-npm run format:data     # Reapply paragraph/footnote formatting to the JSON datasets
-npm run format:data:check  # Fail if the committed datasets are stale
+npm run format:data     # Verify the Arabic dataset is source-controlled (read-only)
+npm run format:data:check  # Verify the Arabic dataset is source-controlled (read-only)
 npm run format:mongo    # Dry-run MongoDB formatting refresh
 npm run format:mongo -- --apply  # Apply the formatting refresh
 node src/seeds/createAdmin.js <username>
 ```
+
+The Arabic dataset is source-controlled by `syncArabicSource.py`. The
+`format:data` commands only verify that every row carries `sourceQuestionId`;
+they never rewrite the file. Use
+`python3 src/seeds/syncArabicSource.py --check` for the real Arabic source
+validation, and `python3 src/seeds/syncArabicSource.py` to regenerate the
+dataset from the source.
 
 The admin creation command prompts for a password. To remove an admin account:
 

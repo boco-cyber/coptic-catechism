@@ -44,6 +44,29 @@ class EnglishFormattingTests(unittest.TestCase):
         self.assertEqual(body, "The answer belongs here.")
         self.assertIn("What is the next question?", dropped)
 
+    def test_normalizes_wrapped_english_body_without_footnote_extraction(self):
+        source = (
+            "a. The feeling that my life is a journey with the Lord\n\n"
+            "of glory.\n\n"
+            "b. The second point. 42"
+        )
+        body = formatting.normalize_english_body(source)
+        self.assertEqual(
+            body,
+            "a. The feeling that my life is a journey with the Lord of glory."
+            "\n\nb. The second point. 42",
+        )
+        self.assertTrue(formatting.validate_preserved(source, [body]))
+
+    def test_normalization_rejects_character_changes(self):
+        original = formatting.validate_preserved
+        formatting.validate_preserved = lambda source, parts: False
+        try:
+            with self.assertRaises(ValueError):
+                formatting.normalize_english_body("The body.")
+        finally:
+            formatting.validate_preserved = original
+
     def test_english_dataset_formatting_is_idempotent(self):
         rows = [{"questionNumber": 1, "question": "Q?", "answer": "A body.1\n1 Cf. Source."}]
         first = formatting.format_english_dataset(rows)

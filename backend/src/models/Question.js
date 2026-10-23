@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
 
+const questionSectionSchema = new mongoose.Schema({
+  sourceSectionId: { type: String, required: true },
+  title: { type: String, required: true }
+}, { _id: false });
+
+const sourceSpanSchema = new mongoose.Schema({
+  pdfPage: { type: Number, required: true },
+  printedPage: { type: String }
+}, { _id: false });
+
 const questionSchema = new mongoose.Schema({
   questionNumber: {
     type: Number,
@@ -36,6 +46,45 @@ const questionSchema = new mongoose.Schema({
   chapterTitle: {
     type: String,
     trim: true
+  },
+  sourceQuestionId: {
+    type: String,
+    trim: true
+  },
+  sourceSectionId: {
+    type: String,
+    trim: true
+  },
+  sourceSectionPath: {
+    type: [questionSectionSchema],
+    default: []
+  },
+  questionNumberExact: {
+    type: String
+  },
+  verificationStatus: {
+    type: String,
+    enum: ['verified', 'needs_review'],
+    default: 'verified'
+  },
+  reviewNotes: {
+    type: String
+  },
+  printedPageStart: {
+    type: String
+  },
+  printedPageEnd: {
+    type: String
+  },
+  pdfPageStart: {
+    type: Number
+  },
+  pdfPageEnd: {
+    type: Number
+  },
+  sourceSpans: {
+    type: [sourceSpanSchema],
+    default: []
   },
   // Content metadata
   scriptureReferences: [{
@@ -82,5 +131,7 @@ questionSchema.index({
 questionSchema.index({ book: 1, questionNumber: 1 });
 questionSchema.index({ chapter: 1, questionNumber: 1 });
 questionSchema.index({ bookNumber: 1 });
+questionSchema.index({ sourceQuestionId: 1 }, { unique: true, sparse: true });
+questionSchema.index({ sourceSectionId: 1 });
 
 module.exports = mongoose.model('Question', questionSchema);

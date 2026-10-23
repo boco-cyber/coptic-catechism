@@ -1,0 +1,1683 @@
+{
+  "source": {
+    "name": "catechism_extraction.json",
+    "generatedAtUtc": "2026-10-22T21:26:01.478041+00:00",
+    "extractionMethod": "PyMuPDF block-level text extraction with printed-page verification; headers/footers/page numbers excluded; paragraph breaks preserved.",
+    "hashes": {
+      "catechism_extraction.json": "44bd24229d1d9c87f395e4d401bf464cb228264528a6fc50932f71796adbb30c",
+      "catechism.db": "5b3ae7576dae4aa84eb8e98d7af4e4a7bed0f406563cf4ac625cd3081b3dec4a",
+      "page_manifest.csv": "91dc82482f702ce6e1023e093f57bc2ed6b813940178070da88e04b586bea5aa"
+    }
+  },
+  "volumes": [
+    {
+      "sourceVolumeId": "book_001",
+      "volume": 1,
+      "titleExact": "Catechism of the Coptic Orthodox Church. Volume 1, Books 1 – 3",
+      "authorExact": "Fr. Tadros Yacoub Malaty",
+      "publicationDetailsExact": "First English Edition, 2023\nPublished by St. George Coptic Orthodox Church, Sporting, Alexandria, and Queen St. Mary & Prince Tadros Coptic Orthodox Church, South Brunswick, NJ. Copyright © 2023\nTranslation and Editing: Youth of the Coptic Orthodox Church in the USA, Canada, Europe, Australia, Arabian Gulf, and Egypt.\nCover Design: Miller Ezzat",
+      "pdfPageCount": 763,
+      "bookNumbers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "sourceVolumeId": "book_002",
+      "volume": 2,
+      "titleExact": "Catechism of the Coptic Orthodox Church. Volume 2, Books 4 – 7",
+      "authorExact": "Fr. Tadros Yacoub Malaty",
+      "publicationDetailsExact": "First English Edition, 2023\nPublished by St. George Coptic Orthodox Church, Sporting, Alexandria, and Queen St. Mary & Prince Tadros Coptic Orthodox Church, South Brunswick, NJ. Copyright © 2023\nTranslation and Editing: Youth of the Coptic Orthodox Church in the USA, Canada, Europe, Australia, Arabian Gulf, and Egypt.\nCover Design: Miller Ezzat",
+      "pdfPageCount": 621,
+      "bookNumbers": [
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "books": [
+    {
+      "bookNumber": 1,
+      "sourceVolumeId": "book_001",
+      "volume": 1,
+      "sourceSectionId": "section_001_001",
+      "sourceHeadingExact": "Book 1 (Questions 1 – 92): Introduction to the Coptic Catechism",
+      "title": "Introduction to the Coptic Catechism",
+      "questionRange": {
+        "start": 1,
+        "end": 92
+      },
+      "totalQuestions": 92,
+      "description": "Foundations of the Coptic Catechism, the Holy Bible, Holy Tradition, and faith that works through love.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_001_003",
+          "sourceHeadingExact": "1. (a) Catechism",
+          "title": "Catechism",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1,
+            "end": 2
+          },
+          "totalQuestions": 2,
+          "printedPageStart": 5,
+          "printedPageEnd": 6,
+          "pdfPageStart": 17,
+          "pdfPageEnd": 18,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_001_004",
+          "sourceHeadingExact": "1. (b) The Coptic Catechism Through the Ages",
+          "title": "The Coptic Catechism Through the Ages",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 3,
+            "end": 4
+          },
+          "totalQuestions": 2,
+          "printedPageStart": 7,
+          "printedPageEnd": 22,
+          "pdfPageStart": 19,
+          "pdfPageEnd": 34,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_001_005",
+          "sourceHeadingExact": "2. The Basic Principles of Catechism",
+          "title": "The Basic Principles of Catechism",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 5,
+            "end": 6
+          },
+          "totalQuestions": 2,
+          "printedPageStart": 23,
+          "printedPageEnd": 26,
+          "pdfPageStart": 35,
+          "pdfPageEnd": 38,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_001_006",
+          "sourceHeadingExact": "3. Faith That Works Through Love",
+          "title": "Faith That Works Through Love",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 7,
+            "end": 38
+          },
+          "totalQuestions": 32,
+          "printedPageStart": 27,
+          "printedPageEnd": 46,
+          "pdfPageStart": 39,
+          "pdfPageEnd": 58,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": "section_001_007",
+          "sourceHeadingExact": "4. The Holy Bible",
+          "title": "The Holy Bible",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 39,
+            "end": 60
+          },
+          "totalQuestions": 22,
+          "printedPageStart": 47,
+          "printedPageEnd": 72,
+          "pdfPageStart": 59,
+          "pdfPageEnd": 84,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": "section_001_008",
+          "sourceHeadingExact": "5. Holy Tradition",
+          "title": "Holy Tradition",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 61,
+            "end": 92
+          },
+          "totalQuestions": 32,
+          "printedPageStart": 73,
+          "printedPageEnd": 98,
+          "pdfPageStart": 85,
+          "pdfPageEnd": 110,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 763
+      }
+    },
+    {
+      "bookNumber": 2,
+      "sourceVolumeId": "book_001",
+      "volume": 1,
+      "sourceSectionId": "section_001_010",
+      "sourceHeadingExact": "Book 2 (Questions 93 – 448): Christian Dogma",
+      "title": "Christian Dogma",
+      "questionRange": {
+        "start": 93,
+        "end": 448
+      },
+      "totalQuestions": 356,
+      "description": "The Creed, the Holy Trinity, Creation, Divine Providence, Grace, the Fall, Christology, and the Holy Spirit.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_001_011",
+          "sourceHeadingExact": "1. Christian Dogma",
+          "title": "Christian Dogma",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 93,
+            "end": 95
+          },
+          "totalQuestions": 3,
+          "printedPageStart": 103,
+          "printedPageEnd": 104,
+          "pdfPageStart": 115,
+          "pdfPageEnd": 116,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_001_012",
+          "sourceHeadingExact": "2. (a) The Creed of Faith and the Origin of the Canons of the Church",
+          "title": "The Creed of Faith and the Origin of the Canons of the Church",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 96,
+            "end": 98
+          },
+          "totalQuestions": 3,
+          "printedPageStart": 105,
+          "printedPageEnd": 108,
+          "pdfPageStart": 117,
+          "pdfPageEnd": 120,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_001_013",
+          "sourceHeadingExact": "2. (b) Regarding the Coptic Orthodox Creed",
+          "title": "Regarding the Coptic Orthodox Creed",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 99,
+            "end": 103
+          },
+          "totalQuestions": 5,
+          "printedPageStart": 109,
+          "printedPageEnd": 114,
+          "pdfPageStart": 121,
+          "pdfPageEnd": 126,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_001_014",
+          "sourceHeadingExact": "2. (c) Exposition of the Creed",
+          "title": "Exposition of the Creed",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 104,
+            "end": 144
+          },
+          "totalQuestions": 41,
+          "printedPageStart": 115,
+          "printedPageEnd": 142,
+          "pdfPageStart": 127,
+          "pdfPageEnd": 154,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": "section_001_015",
+          "sourceHeadingExact": "3. Faith in God and Our Knowledge of Him",
+          "title": "Faith in God and Our Knowledge of Him",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 145,
+            "end": 175
+          },
+          "totalQuestions": 31,
+          "printedPageStart": 143,
+          "printedPageEnd": 156,
+          "pdfPageStart": 155,
+          "pdfPageEnd": 168,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": "section_001_016",
+          "sourceHeadingExact": "4. The Holy Trinity",
+          "title": "The Holy Trinity",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 176,
+            "end": 206
+          },
+          "totalQuestions": 31,
+          "printedPageStart": 157,
+          "printedPageEnd": 180,
+          "pdfPageStart": 169,
+          "pdfPageEnd": 192,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": "section_001_017",
+          "sourceHeadingExact": "5. The Wondrous Creator, the Guardian of the World",
+          "title": "The Wondrous Creator, the Guardian of the World",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 207,
+            "end": 232
+          },
+          "totalQuestions": 26,
+          "printedPageStart": 181,
+          "printedPageEnd": 194,
+          "pdfPageStart": 193,
+          "pdfPageEnd": 206,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": "section_001_018",
+          "sourceHeadingExact": "6. The Exalted Nature of the Human Creation",
+          "title": "The Exalted Nature of the Human Creation",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 233,
+            "end": 261
+          },
+          "totalQuestions": 29,
+          "printedPageStart": 195,
+          "printedPageEnd": 210,
+          "pdfPageStart": 207,
+          "pdfPageEnd": 222,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": "section_001_019",
+          "sourceHeadingExact": "7. Divine Providence",
+          "title": "Divine Providence",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 262,
+            "end": 292
+          },
+          "totalQuestions": 31,
+          "printedPageStart": 211,
+          "printedPageEnd": 226,
+          "pdfPageStart": 223,
+          "pdfPageEnd": 238,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": "section_001_020",
+          "sourceHeadingExact": "8. Divine Grace",
+          "title": "Divine Grace",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 293,
+            "end": 307
+          },
+          "totalQuestions": 15,
+          "printedPageStart": 227,
+          "printedPageEnd": 246,
+          "pdfPageStart": 239,
+          "pdfPageEnd": 258,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": "section_001_021",
+          "sourceHeadingExact": "9. The Fall of Humanity",
+          "title": "The Fall of Humanity",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 308,
+            "end": 337
+          },
+          "totalQuestions": 30,
+          "printedPageStart": 247,
+          "printedPageEnd": 266,
+          "pdfPageStart": 259,
+          "pdfPageEnd": 278,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": "section_001_022",
+          "sourceHeadingExact": "10. Our Lord Jesus Christ, Savior of the World",
+          "title": "Our Lord Jesus Christ, Savior of the World",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 338,
+            "end": 369
+          },
+          "totalQuestions": 32,
+          "printedPageStart": 267,
+          "printedPageEnd": 282,
+          "pdfPageStart": 279,
+          "pdfPageEnd": 294,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": "section_001_023",
+          "sourceHeadingExact": "11. Titles and Names of the Savior that Witness to the Works of His Love",
+          "title": "Titles and Names of the Savior that Witness to the Works of His Love",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 370,
+            "end": 408
+          },
+          "totalQuestions": 39,
+          "printedPageStart": 283,
+          "printedPageEnd": 314,
+          "pdfPageStart": 295,
+          "pdfPageEnd": 326,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": "section_001_024",
+          "sourceHeadingExact": "12. The Holy Spirit and Divine Salvation",
+          "title": "The Holy Spirit and Divine Salvation",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 409,
+            "end": 448
+          },
+          "totalQuestions": 40,
+          "printedPageStart": 315,
+          "printedPageEnd": 358,
+          "pdfPageStart": 327,
+          "pdfPageEnd": 370,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 763
+      }
+    },
+    {
+      "bookNumber": 3,
+      "sourceVolumeId": "book_001",
+      "volume": 1,
+      "sourceSectionId": "section_001_025",
+      "sourceHeadingExact": "Book 3 (Questions 449 – 877): The Church: The Kingdom of God",
+      "title": "The Church: The Kingdom of God",
+      "questionRange": {
+        "start": 449,
+        "end": 877
+      },
+      "totalQuestions": 429,
+      "description": "Ecclesiology, the Holy Sacraments, the priesthood, matrimony, and the monastic movement.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_001_026",
+          "sourceHeadingExact": "1. The Church: The Kingdom of God",
+          "title": "The Church: The Kingdom of God",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 449,
+            "end": 483
+          },
+          "totalQuestions": 35,
+          "printedPageStart": 361,
+          "printedPageEnd": 390,
+          "pdfPageStart": 373,
+          "pdfPageEnd": 402,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_001_027",
+          "sourceHeadingExact": "2. The Heavenly High Priest and the Church",
+          "title": "The Heavenly High Priest and the Church",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 484,
+            "end": 492
+          },
+          "totalQuestions": 9,
+          "printedPageStart": 391,
+          "printedPageEnd": 398,
+          "pdfPageStart": 403,
+          "pdfPageEnd": 410,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_001_028",
+          "sourceHeadingExact": "3. The Church as a Heavenly Wedding Feast",
+          "title": "The Church as a Heavenly Wedding Feast",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 493,
+            "end": 508
+          },
+          "totalQuestions": 16,
+          "printedPageStart": 399,
+          "printedPageEnd": 414,
+          "pdfPageStart": 411,
+          "pdfPageEnd": 426,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_001_029",
+          "sourceHeadingExact": "4. The Unique Work of the Church",
+          "title": "The Unique Work of the Church",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 509,
+            "end": 519
+          },
+          "totalQuestions": 11,
+          "printedPageStart": 415,
+          "printedPageEnd": 422,
+          "pdfPageStart": 427,
+          "pdfPageEnd": 434,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": "section_001_030",
+          "sourceHeadingExact": "5. The Church: House of Salvation",
+          "title": "The Church: House of Salvation",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 520,
+            "end": 533
+          },
+          "totalQuestions": 14,
+          "printedPageStart": 423,
+          "printedPageEnd": 434,
+          "pdfPageStart": 435,
+          "pdfPageEnd": 446,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": "section_001_031",
+          "sourceHeadingExact": "6. The Eminence of the Church",
+          "title": "The Eminence of the Church",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 534,
+            "end": 549
+          },
+          "totalQuestions": 16,
+          "printedPageStart": 435,
+          "printedPageEnd": 440,
+          "pdfPageStart": 447,
+          "pdfPageEnd": 452,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": "section_001_032",
+          "sourceHeadingExact": "7. The Church and Daily Renewal",
+          "title": "The Church and Daily Renewal",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 550,
+            "end": 552
+          },
+          "totalQuestions": 3,
+          "printedPageStart": 441,
+          "printedPageEnd": 444,
+          "pdfPageStart": 453,
+          "pdfPageEnd": 456,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": "section_001_033",
+          "sourceHeadingExact": "8. The Church and Society",
+          "title": "The Church and Society",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 553,
+            "end": 575
+          },
+          "totalQuestions": 23,
+          "printedPageStart": 445,
+          "printedPageEnd": 458,
+          "pdfPageStart": 457,
+          "pdfPageEnd": 470,
+          "subsections": [
+            {
+              "sourceSectionId": "section_001_034",
+              "parentSourceSectionId": "section_001_033",
+              "sourceHeadingExact": "The Role of Women in Society and Church",
+              "title": "The Role of Women in Society and Church",
+              "sequenceInBook": 34,
+              "questionRange": {
+                "start": 569,
+                "end": 575
+              },
+              "totalQuestions": 7,
+              "printedPageStart": 459,
+              "printedPageEnd": 462,
+              "pdfPageStart": 471,
+              "pdfPageEnd": 474,
+              "children": []
+            }
+          ]
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": "section_001_035",
+          "sourceHeadingExact": "9. The Person of the Church",
+          "title": "The Person of the Church",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 576,
+            "end": 583
+          },
+          "totalQuestions": 8,
+          "printedPageStart": 463,
+          "printedPageEnd": 466,
+          "pdfPageStart": 475,
+          "pdfPageEnd": 478,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": "section_001_036",
+          "sourceHeadingExact": "10. The Mystery of the House of God",
+          "title": "The Mystery of the House of God",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 584,
+            "end": 607
+          },
+          "totalQuestions": 24,
+          "printedPageStart": 467,
+          "printedPageEnd": 480,
+          "pdfPageStart": 479,
+          "pdfPageEnd": 492,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": "section_001_037",
+          "sourceHeadingExact": "11. The Iconostasis",
+          "title": "The Iconostasis",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 608,
+            "end": 630
+          },
+          "totalQuestions": 23,
+          "printedPageStart": 481,
+          "printedPageEnd": 496,
+          "pdfPageStart": 493,
+          "pdfPageEnd": 508,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": "section_001_038",
+          "sourceHeadingExact": "12. Coptic Art and Symbolism",
+          "title": "Coptic Art and Symbolism",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 631,
+            "end": 638
+          },
+          "totalQuestions": 8,
+          "printedPageStart": 497,
+          "printedPageEnd": 502,
+          "pdfPageStart": 509,
+          "pdfPageEnd": 514,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": "section_001_039",
+          "sourceHeadingExact": "13. The Holy Utensils",
+          "title": "The Holy Utensils",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 639,
+            "end": 652
+          },
+          "totalQuestions": 14,
+          "printedPageStart": 503,
+          "printedPageEnd": 508,
+          "pdfPageStart": 515,
+          "pdfPageEnd": 520,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": "section_001_040",
+          "sourceHeadingExact": "14. The Church Nave",
+          "title": "The Church Nave",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 653,
+            "end": 664
+          },
+          "totalQuestions": 12,
+          "printedPageStart": 509,
+          "printedPageEnd": 516,
+          "pdfPageStart": 521,
+          "pdfPageEnd": 528,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 15,
+          "sourceSectionId": "section_001_041",
+          "sourceHeadingExact": "15. The Church Belfry",
+          "title": "The Church Belfry",
+          "sortOrder": 15,
+          "questionRange": {
+            "start": 665,
+            "end": 669
+          },
+          "totalQuestions": 5,
+          "printedPageStart": 517,
+          "printedPageEnd": 520,
+          "pdfPageStart": 529,
+          "pdfPageEnd": 532,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 16,
+          "sourceSectionId": "section_001_042",
+          "sourceHeadingExact": "16. The Holy Sacraments",
+          "title": "The Holy Sacraments",
+          "sortOrder": 16,
+          "questionRange": {
+            "start": 670,
+            "end": 674
+          },
+          "totalQuestions": 5,
+          "printedPageStart": 521,
+          "printedPageEnd": 526,
+          "pdfPageStart": 533,
+          "pdfPageEnd": 538,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 17,
+          "sourceSectionId": "section_001_043",
+          "sourceHeadingExact": "17. The Sacrament of Baptism",
+          "title": "The Sacrament of Baptism",
+          "sortOrder": 17,
+          "questionRange": {
+            "start": 675,
+            "end": 712
+          },
+          "totalQuestions": 38,
+          "printedPageStart": 527,
+          "printedPageEnd": 534,
+          "pdfPageStart": 539,
+          "pdfPageEnd": 546,
+          "subsections": [
+            {
+              "sourceSectionId": "section_001_044",
+              "parentSourceSectionId": "section_001_043",
+              "sourceHeadingExact": "On the Rites of Baptism",
+              "title": "On the Rites of Baptism",
+              "sequenceInBook": 44,
+              "questionRange": {
+                "start": 682,
+                "end": 712
+              },
+              "totalQuestions": 31,
+              "printedPageStart": 535,
+              "printedPageEnd": 540,
+              "pdfPageStart": 547,
+              "pdfPageEnd": 552,
+              "children": [
+                {
+                  "sourceSectionId": "section_001_045",
+                  "parentSourceSectionId": "section_001_044",
+                  "sourceHeadingExact": "The Rites of Holy Baptism",
+                  "title": "The Rites of Holy Baptism",
+                  "sequenceInBook": 45,
+                  "questionRange": {
+                    "start": 688,
+                    "end": 712
+                  },
+                  "totalQuestions": 25,
+                  "printedPageStart": 541,
+                  "printedPageEnd": 560,
+                  "pdfPageStart": 553,
+                  "pdfPageEnd": 572,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "chapterNumber": 18,
+          "sourceSectionId": "section_001_046",
+          "sourceHeadingExact": "18. The Sacrament of Chrismation",
+          "title": "The Sacrament of Chrismation",
+          "sortOrder": 18,
+          "questionRange": {
+            "start": 713,
+            "end": 727
+          },
+          "totalQuestions": 15,
+          "printedPageStart": 561,
+          "printedPageEnd": 574,
+          "pdfPageStart": 573,
+          "pdfPageEnd": 586,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 19,
+          "sourceSectionId": "section_001_047",
+          "sourceHeadingExact": "19. The Sacrament of Repentance & Confession",
+          "title": "The Sacrament of Repentance & Confession",
+          "sortOrder": 19,
+          "questionRange": {
+            "start": 728,
+            "end": 763
+          },
+          "totalQuestions": 36,
+          "printedPageStart": 575,
+          "printedPageEnd": 596,
+          "pdfPageStart": 587,
+          "pdfPageEnd": 608,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 20,
+          "sourceSectionId": "section_001_048",
+          "sourceHeadingExact": "20. The Sacrament of the Eucharist",
+          "title": "The Sacrament of the Eucharist",
+          "sortOrder": 20,
+          "questionRange": {
+            "start": 764,
+            "end": 807
+          },
+          "totalQuestions": 44,
+          "printedPageStart": 597,
+          "printedPageEnd": 616,
+          "pdfPageStart": 609,
+          "pdfPageEnd": 628,
+          "subsections": [
+            {
+              "sourceSectionId": "section_001_049",
+              "parentSourceSectionId": "section_001_048",
+              "sourceHeadingExact": "On the Main Features of the Coptic Liturgy",
+              "title": "On the Main Features of the Coptic Liturgy",
+              "sequenceInBook": 49,
+              "questionRange": {
+                "start": 790,
+                "end": 807
+              },
+              "totalQuestions": 18,
+              "printedPageStart": 617,
+              "printedPageEnd": 626,
+              "pdfPageStart": 629,
+              "pdfPageEnd": 638,
+              "children": []
+            }
+          ]
+        },
+        {
+          "chapterNumber": 21,
+          "sourceSectionId": "section_001_050",
+          "sourceHeadingExact": "21. The Sacrament of Priesthood",
+          "title": "The Sacrament of Priesthood",
+          "sortOrder": 21,
+          "questionRange": {
+            "start": 808,
+            "end": 841
+          },
+          "totalQuestions": 34,
+          "printedPageStart": 627,
+          "printedPageEnd": 658,
+          "pdfPageStart": 639,
+          "pdfPageEnd": 670,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 22,
+          "sourceSectionId": "section_001_051",
+          "sourceHeadingExact": "22. The Sacrament of Holy Matrimony",
+          "title": "The Sacrament of Holy Matrimony",
+          "sortOrder": 22,
+          "questionRange": {
+            "start": 842,
+            "end": 866
+          },
+          "totalQuestions": 25,
+          "printedPageStart": 659,
+          "printedPageEnd": 680,
+          "pdfPageStart": 671,
+          "pdfPageEnd": 692,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 23,
+          "sourceSectionId": "section_001_052",
+          "sourceHeadingExact": "23. Unction of the Sick",
+          "title": "Unction of the Sick",
+          "sortOrder": 23,
+          "questionRange": {
+            "start": 867,
+            "end": 869
+          },
+          "totalQuestions": 3,
+          "printedPageStart": 681,
+          "printedPageEnd": 684,
+          "pdfPageStart": 693,
+          "pdfPageEnd": 696,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 24,
+          "sourceSectionId": "section_001_053",
+          "sourceHeadingExact": "24. The Coptic Church and the Monastic Movement",
+          "title": "The Coptic Church and the Monastic Movement",
+          "sortOrder": 24,
+          "questionRange": {
+            "start": 870,
+            "end": 877
+          },
+          "totalQuestions": 8,
+          "printedPageStart": 685,
+          "printedPageEnd": 692,
+          "pdfPageStart": 697,
+          "pdfPageEnd": 704,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 763
+      }
+    },
+    {
+      "bookNumber": 4,
+      "sourceVolumeId": "book_002",
+      "volume": 2,
+      "sourceSectionId": "section_002_001",
+      "sourceHeadingExact": "Book 4 (Questions 878 - 1112): Church Worship as a Journey to Heaven",
+      "title": "Church Worship as a Journey to Heaven",
+      "questionRange": {
+        "start": 878,
+        "end": 1112
+      },
+      "totalQuestions": 235,
+      "description": "Prayer, the Agpeya, fasting, praise, hymns, the Coptic calendar, and worship as dying with Christ.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_002_002",
+          "sourceHeadingExact": "1. Church Worship",
+          "title": "Church Worship",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 878,
+            "end": 895
+          },
+          "totalQuestions": 18,
+          "printedPageStart": 3,
+          "printedPageEnd": 19,
+          "pdfPageStart": 15,
+          "pdfPageEnd": 31,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_002_003",
+          "sourceHeadingExact": "2. The Life of Prayer",
+          "title": "The Life of Prayer",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 896,
+            "end": 919
+          },
+          "totalQuestions": 24,
+          "printedPageStart": 20,
+          "printedPageEnd": 39,
+          "pdfPageStart": 32,
+          "pdfPageEnd": 51,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_002_004",
+          "sourceHeadingExact": "3. The Agpeya Prayers (the Canonical Hours)",
+          "title": "The Agpeya Prayers (the Canonical Hours)",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 920,
+            "end": 930
+          },
+          "totalQuestions": 11,
+          "printedPageStart": 40,
+          "printedPageEnd": 55,
+          "pdfPageStart": 52,
+          "pdfPageEnd": 67,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_002_005",
+          "sourceHeadingExact": "4. The Model Prayer",
+          "title": "The Model Prayer",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 931,
+            "end": 944
+          },
+          "totalQuestions": 14,
+          "printedPageStart": 56,
+          "printedPageEnd": 73,
+          "pdfPageStart": 68,
+          "pdfPageEnd": 85,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": "section_002_006",
+          "sourceHeadingExact": "5. Prayer of the Mind and Contemplation",
+          "title": "Prayer of the Mind and Contemplation",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 945,
+            "end": 959
+          },
+          "totalQuestions": 15,
+          "printedPageStart": 74,
+          "printedPageEnd": 90,
+          "pdfPageStart": 86,
+          "pdfPageEnd": 102,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": "section_002_007",
+          "sourceHeadingExact": "6. The Jesus Prayer or the Arrow Prayer",
+          "title": "The Jesus Prayer or the Arrow Prayer",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 960,
+            "end": 978
+          },
+          "totalQuestions": 19,
+          "printedPageStart": 91,
+          "printedPageEnd": 106,
+          "pdfPageStart": 103,
+          "pdfPageEnd": 118,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": "section_002_008",
+          "sourceHeadingExact": "7. Metanoias and Prostrations",
+          "title": "Metanoias and Prostrations",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 979,
+            "end": 986
+          },
+          "totalQuestions": 8,
+          "printedPageStart": 107,
+          "printedPageEnd": 112,
+          "pdfPageStart": 119,
+          "pdfPageEnd": 124,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": "section_002_009",
+          "sourceHeadingExact": "8. Holy Worship and the Full Life",
+          "title": "Holy Worship and the Full Life",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 987,
+            "end": 997
+          },
+          "totalQuestions": 11,
+          "printedPageStart": 113,
+          "printedPageEnd": 126,
+          "pdfPageStart": 125,
+          "pdfPageEnd": 138,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": "section_002_010",
+          "sourceHeadingExact": "9. Worship and the Fear of the Lord",
+          "title": "Worship and the Fear of the Lord",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 998,
+            "end": 1014
+          },
+          "totalQuestions": 17,
+          "printedPageStart": 127,
+          "printedPageEnd": 146,
+          "pdfPageStart": 139,
+          "pdfPageEnd": 158,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": "section_002_011",
+          "sourceHeadingExact": "10. Holy Fasting",
+          "title": "Holy Fasting",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 1015,
+            "end": 1032
+          },
+          "totalQuestions": 18,
+          "printedPageStart": 147,
+          "printedPageEnd": 160,
+          "pdfPageStart": 159,
+          "pdfPageEnd": 172,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": "section_002_012",
+          "sourceHeadingExact": "11. Worship and ‘Dying with Christ’",
+          "title": "Worship and ‘Dying with Christ’",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 1033,
+            "end": 1041
+          },
+          "totalQuestions": 9,
+          "printedPageStart": 161,
+          "printedPageEnd": 178,
+          "pdfPageStart": 173,
+          "pdfPageEnd": 190,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": "section_002_013",
+          "sourceHeadingExact": "12. Tears in Worship",
+          "title": "Tears in Worship",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 1042,
+            "end": 1053
+          },
+          "totalQuestions": 12,
+          "printedPageStart": 179,
+          "printedPageEnd": 198,
+          "pdfPageStart": 191,
+          "pdfPageEnd": 210,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": "section_002_014",
+          "sourceHeadingExact": "13. Praise and the Heavenly Mindset",
+          "title": "Praise and the Heavenly Mindset",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 1054,
+            "end": 1065
+          },
+          "totalQuestions": 12,
+          "printedPageStart": 199,
+          "printedPageEnd": 210,
+          "pdfPageStart": 211,
+          "pdfPageEnd": 222,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": "section_002_015",
+          "sourceHeadingExact": "14. Church Hymns and the Heavenly Mindset",
+          "title": "Church Hymns and the Heavenly Mindset",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 1066,
+            "end": 1072
+          },
+          "totalQuestions": 7,
+          "printedPageStart": 211,
+          "printedPageEnd": 218,
+          "pdfPageStart": 223,
+          "pdfPageEnd": 230,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 15,
+          "sourceSectionId": "section_002_016",
+          "sourceHeadingExact": "15. The Coptic Church Calendar and Joyful Daily Life in the Lord",
+          "title": "The Coptic Church Calendar and Joyful Daily Life in the Lord",
+          "sortOrder": 15,
+          "questionRange": {
+            "start": 1073,
+            "end": 1112
+          },
+          "totalQuestions": 40,
+          "printedPageStart": 219,
+          "printedPageEnd": 250,
+          "pdfPageStart": 231,
+          "pdfPageEnd": 262,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 621
+      }
+    },
+    {
+      "bookNumber": 5,
+      "sourceVolumeId": "book_002",
+      "volume": 2,
+      "sourceSectionId": "section_002_017",
+      "sourceHeadingExact": "Book 5 (Questions 1113 - 1184): The Believer and the Heavenly Hosts",
+      "title": "The Believer and the Heavenly Hosts",
+      "questionRange": {
+        "start": 1113,
+        "end": 1184
+      },
+      "totalQuestions": 72,
+      "description": "Angels, the spiritual world, the order of heavenly hosts, and spiritual warfare.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_002_018",
+          "sourceHeadingExact": "1. The Creation of the Spiritual World",
+          "title": "The Creation of the Spiritual World",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1113,
+            "end": 1125
+          },
+          "totalQuestions": 13,
+          "printedPageStart": 253,
+          "printedPageEnd": 260,
+          "pdfPageStart": 265,
+          "pdfPageEnd": 272,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_002_019",
+          "sourceHeadingExact": "2. Our Companionship with the Heavenly Hosts",
+          "title": "Our Companionship with the Heavenly Hosts",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 1126,
+            "end": 1137
+          },
+          "totalQuestions": 12,
+          "printedPageStart": 261,
+          "printedPageEnd": 270,
+          "pdfPageStart": 273,
+          "pdfPageEnd": 282,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_002_020",
+          "sourceHeadingExact": "3. The Order of the Heavenly Hosts",
+          "title": "The Order of the Heavenly Hosts",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 1138,
+            "end": 1167
+          },
+          "totalQuestions": 30,
+          "printedPageStart": 271,
+          "printedPageEnd": 301,
+          "pdfPageStart": 283,
+          "pdfPageEnd": 313,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_002_021",
+          "sourceHeadingExact": "4. The Devil Has No Authority Over Us",
+          "title": "The Devil Has No Authority Over Us",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 1168,
+            "end": 1184
+          },
+          "totalQuestions": 17,
+          "printedPageStart": 302,
+          "printedPageEnd": 313,
+          "pdfPageStart": 314,
+          "pdfPageEnd": 325,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 621
+      }
+    },
+    {
+      "bookNumber": 6,
+      "sourceVolumeId": "book_002",
+      "volume": 2,
+      "sourceSectionId": "section_002_022",
+      "sourceHeadingExact": "Book 6 (Questions 1185 - 1356): Christian Concepts and Everyday Life",
+      "title": "Christian Concepts and Everyday Life",
+      "questionRange": {
+        "start": 1185,
+        "end": 1356
+      },
+      "totalQuestions": 172,
+      "description": "Virtues, vices, Church and State, social relationships, wealth, liberty, and science and faith.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_002_023",
+          "sourceHeadingExact": "1. Christian Virtues",
+          "title": "Christian Virtues",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1185,
+            "end": 1187
+          },
+          "totalQuestions": 3,
+          "printedPageStart": 316,
+          "printedPageEnd": 327,
+          "pdfPageStart": 328,
+          "pdfPageEnd": 339,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_002_024",
+          "sourceHeadingExact": "2. The Virtue of Discernment and Illumination",
+          "title": "The Virtue of Discernment and Illumination",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 1188,
+            "end": 1198
+          },
+          "totalQuestions": 11,
+          "printedPageStart": 328,
+          "printedPageEnd": 337,
+          "pdfPageStart": 340,
+          "pdfPageEnd": 349,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_002_025",
+          "sourceHeadingExact": "3. The Virtue of Obedience",
+          "title": "The Virtue of Obedience",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 1199,
+            "end": 1222
+          },
+          "totalQuestions": 24,
+          "printedPageStart": 338,
+          "printedPageEnd": 353,
+          "pdfPageStart": 350,
+          "pdfPageEnd": 365,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_002_026",
+          "sourceHeadingExact": "4. The Virtues of Chastity and Purity",
+          "title": "The Virtues of Chastity and Purity",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 1223,
+            "end": 1242
+          },
+          "totalQuestions": 20,
+          "printedPageStart": 354,
+          "printedPageEnd": 367,
+          "pdfPageStart": 366,
+          "pdfPageEnd": 379,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": "section_002_027",
+          "sourceHeadingExact": "5. Vices or Evils",
+          "title": "Vices or Evils",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 1243,
+            "end": 1254
+          },
+          "totalQuestions": 12,
+          "printedPageStart": 368,
+          "printedPageEnd": 377,
+          "pdfPageStart": 380,
+          "pdfPageEnd": 389,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": "section_002_028",
+          "sourceHeadingExact": "6. Christian Faith and Human Culture",
+          "title": "Christian Faith and Human Culture",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 1255,
+            "end": 1265
+          },
+          "totalQuestions": 11,
+          "printedPageStart": 378,
+          "printedPageEnd": 391,
+          "pdfPageStart": 390,
+          "pdfPageEnd": 403,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": "section_002_029",
+          "sourceHeadingExact": "7. The Relationship Between Church and State",
+          "title": "The Relationship Between Church and State",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 1266,
+            "end": 1274
+          },
+          "totalQuestions": 9,
+          "printedPageStart": 392,
+          "printedPageEnd": 398,
+          "pdfPageStart": 404,
+          "pdfPageEnd": 410,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 8,
+          "sourceSectionId": "section_002_030",
+          "sourceHeadingExact": "8. Christian Faith and Military Service",
+          "title": "Christian Faith and Military Service",
+          "sortOrder": 8,
+          "questionRange": {
+            "start": 1275,
+            "end": 1295
+          },
+          "totalQuestions": 21,
+          "printedPageStart": 399,
+          "printedPageEnd": 412,
+          "pdfPageStart": 411,
+          "pdfPageEnd": 424,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 9,
+          "sourceSectionId": "section_002_031",
+          "sourceHeadingExact": "9. Christian Faith and Social and Familial Relationships",
+          "title": "Christian Faith and Social and Familial Relationships",
+          "sortOrder": 9,
+          "questionRange": {
+            "start": 1296,
+            "end": 1305
+          },
+          "totalQuestions": 10,
+          "printedPageStart": 413,
+          "printedPageEnd": 419,
+          "pdfPageStart": 425,
+          "pdfPageEnd": 431,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 10,
+          "sourceSectionId": "section_002_032",
+          "sourceHeadingExact": "10. Social Cohesion",
+          "title": "Social Cohesion",
+          "sortOrder": 10,
+          "questionRange": {
+            "start": 1306,
+            "end": 1309
+          },
+          "totalQuestions": 4,
+          "printedPageStart": 420,
+          "printedPageEnd": 423,
+          "pdfPageStart": 432,
+          "pdfPageEnd": 435,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 11,
+          "sourceSectionId": "section_002_033",
+          "sourceHeadingExact": "11. Christian Faith and Social Class",
+          "title": "Christian Faith and Social Class",
+          "sortOrder": 11,
+          "questionRange": {
+            "start": 1310,
+            "end": 1318
+          },
+          "totalQuestions": 9,
+          "printedPageStart": 424,
+          "printedPageEnd": 433,
+          "pdfPageStart": 436,
+          "pdfPageEnd": 445,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 12,
+          "sourceSectionId": "section_002_034",
+          "sourceHeadingExact": "12. Christian Faith and Liberty",
+          "title": "Christian Faith and Liberty",
+          "sortOrder": 12,
+          "questionRange": {
+            "start": 1319,
+            "end": 1331
+          },
+          "totalQuestions": 13,
+          "printedPageStart": 434,
+          "printedPageEnd": 441,
+          "pdfPageStart": 446,
+          "pdfPageEnd": 453,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 13,
+          "sourceSectionId": "section_002_035",
+          "sourceHeadingExact": "13. Wealth and the Wealthy in the Christian Faith",
+          "title": "Wealth and the Wealthy in the Christian Faith",
+          "sortOrder": 13,
+          "questionRange": {
+            "start": 1332,
+            "end": 1347
+          },
+          "totalQuestions": 16,
+          "printedPageStart": 442,
+          "printedPageEnd": 453,
+          "pdfPageStart": 454,
+          "pdfPageEnd": 465,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 14,
+          "sourceSectionId": "section_002_036",
+          "sourceHeadingExact": "14. Science and Faith",
+          "title": "Science and Faith",
+          "sortOrder": 14,
+          "questionRange": {
+            "start": 1348,
+            "end": 1356
+          },
+          "totalQuestions": 9,
+          "printedPageStart": 454,
+          "printedPageEnd": 459,
+          "pdfPageStart": 466,
+          "pdfPageEnd": 471,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 621
+      }
+    },
+    {
+      "bookNumber": 7,
+      "sourceVolumeId": "book_002",
+      "volume": 2,
+      "sourceSectionId": "section_002_037",
+      "sourceHeadingExact": "Book 7 (Questions 1357 - 1452): Eschatology and the After Life",
+      "title": "Eschatology and the After Life",
+      "questionRange": {
+        "start": 1357,
+        "end": 1452
+      },
+      "totalQuestions": 96,
+      "description": "Death, the resurrection, millennialism, the Second Coming, the Final Judgment, and the heavenly Jerusalem.",
+      "chapters": [
+        {
+          "chapterNumber": 1,
+          "sourceSectionId": "section_002_038",
+          "sourceHeadingExact": "1. The Gift of Death and the Resurrected Life in Christ",
+          "title": "The Gift of Death and the Resurrected Life in Christ",
+          "sortOrder": 1,
+          "questionRange": {
+            "start": 1357,
+            "end": 1369
+          },
+          "totalQuestions": 13,
+          "printedPageStart": 462,
+          "printedPageEnd": 471,
+          "pdfPageStart": 474,
+          "pdfPageEnd": 483,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 2,
+          "sourceSectionId": "section_002_039",
+          "sourceHeadingExact": "2. The Sacred Pain of Loss",
+          "title": "The Sacred Pain of Loss",
+          "sortOrder": 2,
+          "questionRange": {
+            "start": 1370,
+            "end": 1371
+          },
+          "totalQuestions": 2,
+          "printedPageStart": 472,
+          "printedPageEnd": 479,
+          "pdfPageStart": 484,
+          "pdfPageEnd": 491,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 3,
+          "sourceSectionId": "section_002_040",
+          "sourceHeadingExact": "3. Millennialism (Chiliasm)",
+          "title": "Millennialism (Chiliasm)",
+          "sortOrder": 3,
+          "questionRange": {
+            "start": 1372,
+            "end": 1379
+          },
+          "totalQuestions": 8,
+          "printedPageStart": 480,
+          "printedPageEnd": 493,
+          "pdfPageStart": 492,
+          "pdfPageEnd": 505,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 4,
+          "sourceSectionId": "section_002_041",
+          "sourceHeadingExact": "4. The Two Comings and the Rapture",
+          "title": "The Two Comings and the Rapture",
+          "sortOrder": 4,
+          "questionRange": {
+            "start": 1380,
+            "end": 1408
+          },
+          "totalQuestions": 29,
+          "printedPageStart": 494,
+          "printedPageEnd": 509,
+          "pdfPageStart": 506,
+          "pdfPageEnd": 521,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 5,
+          "sourceSectionId": "section_002_042",
+          "sourceHeadingExact": "5. The Final Judgment",
+          "title": "The Final Judgment",
+          "sortOrder": 5,
+          "questionRange": {
+            "start": 1409,
+            "end": 1415
+          },
+          "totalQuestions": 7,
+          "printedPageStart": 510,
+          "printedPageEnd": 522,
+          "pdfPageStart": 522,
+          "pdfPageEnd": 534,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 6,
+          "sourceSectionId": "section_002_043",
+          "sourceHeadingExact": "6. The Resurrected Body",
+          "title": "The Resurrected Body",
+          "sortOrder": 6,
+          "questionRange": {
+            "start": 1416,
+            "end": 1434
+          },
+          "totalQuestions": 19,
+          "printedPageStart": 523,
+          "printedPageEnd": 546,
+          "pdfPageStart": 535,
+          "pdfPageEnd": 558,
+          "subsections": []
+        },
+        {
+          "chapterNumber": 7,
+          "sourceSectionId": "section_002_044",
+          "sourceHeadingExact": "7. Heaven and the Jerusalem Above",
+          "title": "Heaven and the Jerusalem Above",
+          "sortOrder": 7,
+          "questionRange": {
+            "start": 1435,
+            "end": 1452
+          },
+          "totalQuestions": 18,
+          "printedPageStart": 547,
+          "printedPageEnd": 562,
+          "pdfPageStart": 559,
+          "pdfPageEnd": 574,
+          "subsections": []
+        }
+      ],
+      "sourcePageRange": {
+        "start": 1,
+        "end": 621
+      }
+    }
+  ]
+}

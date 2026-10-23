@@ -18,6 +18,23 @@ const bookSchema = new mongoose.Schema({
     required: true,
     enum: [1, 2]
   },
+  sourceVolumeId: {
+    type: String,
+    trim: true
+  },
+  sourceHeadingExact: {
+    type: String
+  },
+  publicationDetailsExact: {
+    type: String
+  },
+  pdfPageCount: {
+    type: Number
+  },
+  sourcePageRange: {
+    start: { type: Number },
+    end: { type: Number }
+  },
   questionRange: {
     start: { type: Number, required: true },
     end: { type: Number, required: true }

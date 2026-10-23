@@ -1,4 +1,6 @@
 const { catalogueFor } = require('../services/catalogue');
+const { Book, EnglishContentBlock, EnglishExtractionIssue } = require('../models');
+const { groupBookContent } = require('../services/bookContent');
 
 function language(req) {
   return req.query.lang === 'ar' ? 'ar' : 'en';
@@ -76,6 +78,53 @@ exports.getChapter = async (req, res) => {
         ...chapter,
         bookTitle: book.title,
         questions
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// GET /api/books/:bookNumber/content - Read-only English companion content
+exports.getBookContent = async (req, res) => {
+  try {
+    const book = await Book.findOne({
+      bookNumber: parseInt(req.params.bookNumber)
+    }).lean();
+
+    if (!book) {
+      return res.status(404).json({ success: false, error: 'Book not found' });
+    }
+
+    const scope = {
+      $or: [
+        { bookNumber: book.bookNumber },
+        { bookNumber: null, volumeNumber: book.volume }
+      ]
+    };
+
+    const [blocks, issues] = await Promise.all([
+      EnglishContentBlock.find(scope).sort({ sequenceInBook: 1 }).lean(),
+      EnglishExtractionIssue.find(scope).sort({ pdfPage: 1 }).lean()
+    ]);
+
+    const grouped = groupBookContent({
+      blocks,
+      issues,
+      bookNumber: book.bookNumber,
+      volumeNumber: book.volume,
+      type: req.query.type
+    });
+
+    res.json({
+      success: true,
+      data: {
+        book: {
+          bookNumber: book.bookNumber,
+          title: book.title,
+          volume: book.volume
+        },
+        ...grouped
       }
     });
   } catch (error) {
